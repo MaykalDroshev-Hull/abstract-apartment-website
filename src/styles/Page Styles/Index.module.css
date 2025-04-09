@@ -1,0 +1,196 @@
+/* Hero Section */
+.heroSection {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.heroImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Tinted overlay */
+.heroSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #F9F7F7(0, 0, 0, 0.6);
+  /* Black tint with 50% opacity */
+  z-index: 1;
+  /* Ensures the overlay is above the image but below the text */
+}
+
+.slogan {
+  position: absolute;
+  text-align: center;
+  color: black;
+  z-index: 2;
+  max-width: 80%;
+}
+
+.slogan h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.slogan p {
+  font-size: 1.5rem;
+  font-weight: 400;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Why Choose Us Section */
+.whyChooseUs {
+  display: flex;
+  align-items: stretch;
+  margin: 50px auto;
+  padding: 20px;
+  width: 90%;
+}
+
+.whyChooseUsHeader h1 {
+  color: black;
+  margin: 20px auto;
+  font-size: xxx-large;
+  font-weight: bolder;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  /* Ensures content is stacked vertically within each section */
+  text-align: left;
+}
+
+.textBlock h3 {
+  font-size: 1.8rem;
+  color: white;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.textBlock h6 {
+  margin-top: -10px;
+  margin-bottom: 5px;
+  font-size: 1.1rem;
+  color: white;
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.WhatWeDo li{
+  margin-left: 20px;
+  margin-top: 5px;
+}
+
+.textBlock p {
+  font-size: 1rem;
+  color: white;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  margin-right: 10px;
+  margin-left: 10px;
+
+}
+
+.whyChooseImage {
+  width: 90%;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 30px;
+}
+
+.WhatWeDo {
+  background-color: #2e2e2e;
+  /* Greyish background */
+  color: #ffffff;
+  /* White text for contrast */
+  padding: 10%;
+  /* Add padding around the content */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  /* Optional: Add a subtle shadow for depth */
+}
+
+.WhatWeDo h3 {
+  font-size: 1.8rem;
+  /* Adjust font size for the heading */
+  margin-bottom: 15px;
+  /* Space below the heading */
+  color: #f5f5f5;
+  /* Slightly lighter shade for headings */
+}
+
+.WhatWeDo p {
+  font-size: 1rem;
+  /* Font size for the paragraphs */
+  line-height: 1.6;
+  /* Improve readability */
+  margin-bottom: 15px;
+  /* Space between paragraphs */
+  color: #d9d9d9;
+  /* Softer white for paragraph text */
+}
+
+/* Responsive Styling */
+@media (max-width: 756px) {
+  .whyChooseUs {
+    display: grid;
+    align-items: center;
+  }
+
+  .section {
+    margin-bottom: 30px;
+    /* Adds spacing between sections on mobile */
+  }
+}
+
+
+/* Full-Width Image Placeholder */
+.fullWidthImage {
+  width: 100%;
+  margin-top: 50px;
+}
+
+.fullWidthImage img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+
+
+/* Responsive Styling */
+@media (max-width: 756px) {
+  .whyChooseUs {
+    grid-template-columns: 1fr;
+    /* Stack content vertically */
+  }
+
+  .whyChooseImage {
+    margin-top: 20px;
+    /* Add spacing between stacked elements */
+  }
+
+  .slogan h1 {
+    font-size: 2rem;
+  }
+
+  .slogan p {
+    font-size: 1.2rem;
+  }
+}

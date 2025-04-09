@@ -1,0 +1,20 @@
+// This is your Prisma schema file,
+// To properly update db on PlanetScale if changes are made to the table: npx prisma db push (can only be done if database is not in production)
+// To view database in browser: 'npx prisma studio'
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Review {
+  id         Int    @id @default(autoincrement())
+  firstName  String
+  lastName   String
+  reviewText String
+}

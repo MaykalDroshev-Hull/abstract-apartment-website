@@ -1,0 +1,53 @@
+.container {
+  background-color: #FFFDD0;
+  color: white;
+  /* Default text color */
+  display: flex;
+  flex-direction: column;
+  /* Stack items vertically */
+  align-items: center;
+  /* Center items horizontally */
+  padding: 20px;
+  /* Add spacing around the container */
+  margin: 0 auto;
+  /* Center the container horizontally */
+  max-width: 1200px;
+  /* Optional: Limit the width of the content */
+}
+
+.container p {
+  white-space: pre-wrap;
+  /* Preserve line breaks */
+  font-size: 20px;
+  margin: 20px auto;
+  /* Add vertical spacing between elements */
+  width: 80%;
+  /* Limit text width for better readability */
+  color: gray;
+  font-weight: 400;
+  /* Use lighter font for readability */
+  line-height: 1.6;
+  /* Adjust line height for better spacing */
+}
+
+/* Responsive Design */
+@media only screen and (max-width: 768px) {
+  .container p {
+    font-size: 18px;
+    width: 90%;
+    /* Make text slightly wider on smaller screens */
+  }
+}
+
+@media only screen and (max-width: 430px) {
+  .container p {
+    font-size: 16px;
+    width: 90%;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .container p {
+    font-size: 14px;
+  }
+}

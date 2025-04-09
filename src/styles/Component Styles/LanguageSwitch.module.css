@@ -1,0 +1,29 @@
+/* LanguageSwitch.module.css */
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  padding: 8px 16px;
+  background-color: #f5c501;
+  border: none;
+  border-radius: 60px;
+  cursor: pointer;
+  font-family: 'Helvetica', Arial, sans-serif;
+  font-weight: bold;
+  font-size: 14px;
+  color: #fff;
+  transition: background-color 0.2s;
+}
+
+.switch:hover {
+  background-color: #e0b501;
+}
+
+.icon {
+  width: 15px;
+  /* Increase to 1rem for better visibility */
+  margin-right: 8px;
+  /* Adjust spacing if necessary */
+  color: white;
+}
