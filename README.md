@@ -39,4 +39,4 @@ The way it works is that the website uses an email to send one to itself with al
     4. The file should look like: <br>
     `NEXT_PUBLIC_EMAIL=email@yahoo.com`<br>
      `NEXT_PUBLIC_EMAIL_PASS=passowrd`
-    5. Try to use the form and check the Terminal for errors if occured
+    5. Try to use the form and check the Terminal for errors if occured.
