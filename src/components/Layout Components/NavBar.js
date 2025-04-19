@@ -34,7 +34,7 @@ const NavBar = () => {
       <div className={styles.navBar}>
         {/* Logo */}
         <div className={styles.logo}>
-          <Link href="/"><img src="/Images/Logo.png" alt="Logo" className={styles.logoImage} /></Link>
+          <Link href="/"><img src="/Images/Logo_Bulgarian.png" alt="Logo" className={styles.logoImage} /></Link>
         </div>
 
         {/* Desktop Menu */}
@@ -74,6 +74,9 @@ const NavBar = () => {
             <Link href="/contact" onClick={toggleMenu}>
               Контакти
             </Link>
+            {/* <button onClick={toggleLanguage} className={styles.langButton}>
+              {language === 'EN' ? 'BG' : 'EN'}
+            </button> */}
           </div>
         </div>
       </div>

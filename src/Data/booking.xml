@@ -1,0 +1,10 @@
+<bookings>
+  <booking>
+    <date>2025-05-20</date>
+    <isBooked>false</isBooked>
+  </booking>
+  <booking>
+    <date>2025-05-21</date>
+    <isBooked>true</isBooked>
+  </booking>
+</bookings>
