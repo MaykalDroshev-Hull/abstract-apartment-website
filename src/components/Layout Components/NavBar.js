@@ -45,6 +45,7 @@ const NavBar = () => {
           <Link href="/contact">Налични Дати</Link>
           <Link href="/contact">Ценоразпис</Link>
           <Link href="/contact">Контакти</Link>
+          <Link href="/reviews">Ревюта</Link>
         </div>
 
         {/* Mobile Menu */}
@@ -73,6 +74,9 @@ const NavBar = () => {
             </Link>
             <Link href="/contact" onClick={toggleMenu}>
               Контакти
+            </Link>
+            <Link href="/reviews" onClick={toggleMenu}>
+              Ревюта
             </Link>
             {/* <button onClick={toggleLanguage} className={styles.langButton}>
               {language === 'EN' ? 'BG' : 'EN'}

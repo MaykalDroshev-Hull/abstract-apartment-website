@@ -43,6 +43,7 @@ const Footer = () => {
           <Link href="/contact">Налични Дати</Link>
           <Link href="/contact">Ценоразпис</Link>
           <Link href="/contact">Контакти</Link>
+          <Link href="/reviews">Ревюта</Link>
         </div>
         <p className={styles.p} >Изработка от Майкъл Дрошев</p>
       </div>

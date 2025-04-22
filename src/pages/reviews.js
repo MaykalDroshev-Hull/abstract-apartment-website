@@ -1,85 +1,68 @@
-//NOTE: This page is no longer viewable on the live website, however I wanted to keep it here to use as reference in the future -LG
-import {
-  useBreakpointValue,
-  Card,
-  CardBody,
-  Flex,
-  Heading,
-  SimpleGrid,
-  useDisclosure,
-  Text
-} from '@chakra-ui/react'
-import { PrismaClient } from '@prisma/client'
-import Meta from '@/components/Page Components/Meta'
-import PageTitle from '@/components/Page Components/PageTitle'
-import ReviewForm from '@/components/Form Components/ReviewForm'
-import buttonStyles from '../styles/Component Styles/FlowButton.module.css'
+import React, { useEffect, useState } from 'react';
+import styles from '../styles/Page Styles/Reviews.module.css';
 
-/**
- * A React functional component that displays a list of reviews retrieved from the server-side props. It also includes a form for users to submit their own reviews.
- * @function reviews
- * @param {Object} props - The props object containing the review data as an array of objects.
- * @param {Object[]} props.data - An array of objects containing review data, including the reviewer's first and last name, and the review text.
- * @returns {JSX.Element} - A JSX element that renders the list of reviews as cards, along with a form for submitting new reviews.
- */
-const reviews = ({ data }) => {
-  //Sets cardwidth to 100% of the screen width based on the size of the viewport
-  const cardWidth = useBreakpointValue({ base: '100%', md: 'minmax(700px, 1fr)' })
-  const { isOpen, onOpen, onClose } = useDisclosure()
+const Reviews = () => {
+  const [reviews, setReviews] = useState([]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch('/api/reviews');
+        const data = await response.json();
+        setReviews(data.reviews); // Display the first 15 reviews
+      } catch (err) {
+        console.error('Error fetching reviews:', err);
+      }
+    };
+
+    fetchReviews();
+  }, []);
 
   return (
-    <>
-      <Meta
-        title='Reviews'
-        description="Discover what our satisfied customers have to say about Gentry's Auto Detailing's professional detailing services. Read our reviews and see why we're the go-to choice for car owners in the area. From interior and exterior detailing to paint correction and ceramic coating, we pride ourselves on providing the highest quality service. Contact us today to experience it for yourself."
-        keywords="auto detailing reviews, car detailing reviews, customer testimonials, reviews, testimonials, satisfied customers, auto detailing service, car detailing service, paint correction, ceramic coating, interior detailing, exterior detailing, car care, auto appearance, auto restoration, ratings and reviews, review platform (e.g. Yelp, Google Reviews)"
-      />
-      <PageTitle title='reviews' />
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        marginBottom: '15px',
-        fontSize: '18px',
-        fontWeight: '500',
-        color: 'gray'
-      }}>
-        <p>
-          Submit a review here or on <a style={{ fontWeight: '900', textDecoration: 'underline' }} href='https://www.facebook.com/GentrysAutoDetailing'>Facebook</a>!
-        </p>
+    <div className={styles.reviewSection}>
+      <h2 className={styles.sectionTitle}>Какво казват нашите гости</h2>
+      <div className={styles.reviewGrid}>
+        {reviews.map((review, index) => (
+          <div key={index} className={`${styles.reviewCard} ${styles[`card${index % 5}`]}`}>
+            <h3 className={styles.name}>{review.name}</h3>
+            <p className={styles.text}>&ldquo;{review.review}&rdquo;</p>
+            <p className={styles.date}>{review.date}</p>
+            {/* Display star rating */}
+            <div className={styles.rating}>
+              {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+            </div>
+          </div>
+        ))}
       </div>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <button onClick={onOpen} className={buttonStyles.button}> Submit a Review!</button>
-        <ReviewForm isOpen={isOpen} onClose={onClose} />
-      </div>
-      <Flex justifyContent='center'>
-        <SimpleGrid spacing={4} gridTemplateColumns={`repeat(auto-fit, ${cardWidth})`}>
-          {data.map((review) => (
-            <Card key={review.id} padding={4} margin={4}>
-              <Heading size='lg'>{review.firstName} {review.lastName}</Heading>
-              <CardBody>
-                <Text>
-                  {review.reviewText}
-                </Text>
-              </CardBody>
-            </Card>
-          ))}
-        </SimpleGrid>
-      </Flex>
-    </>
-  )
-}
 
-/**
- * Retrieves review data from the Prisma ORM and returns it as props for server-side rendering.
- * @async
- * @function getServerSideProps
- * @returns {Promise<{props: {data: Object[]}}>} - A Promise that resolves to an object containing the review data as an array of objects.
- */
-export async function getServerSideProps() {
-  const prisma = new PrismaClient()
-  const data = await prisma.review.findMany()
+      {/* "И още много" text */}
+      <p className={styles.moreReviewsText}>И още много...</p>
 
-  return { props: { data } }
-}
+      {/* Google Review Button */}
+      <a href="https://search.google.com/local/reviews?placeid=ChIJF91uqn7dq0ARxnEmywQWheI" target="_blank" rel="noopener noreferrer">
+        <button className={styles.googleReviewButton}>
+          <img
+            src="Images\Reviews\GoogleLogo.png"
+            alt="Google Reviews"
+            className={styles.googleReviewLogo}
+          />
+          Прочетете повече отзиви в Google
+        </button>
+      </a>
+      {/* Leave a Review Button */}
+      <a href="https://search.google.com/local/writereview?placeid=ChIJF91uqn7dq0ARxnEmywQWheI" target="_blank" rel="noopener noreferrer">
+        <button className={styles.leaveReviewButton}>
+        <img
+            src="Images\Reviews\5Stars.png"
+            alt="Google Reviews"
+            className={styles.googleReviewLogo}
+          />
+          Оставете вашия отзив
+        </button>
+      </a>
+    </div>
+  );
 
-export default reviews
+};
+
+export default Reviews;
