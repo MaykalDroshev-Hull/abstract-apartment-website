@@ -42,8 +42,8 @@ const NavBar = () => {
           <Link href="/">Начало</Link>
           <Link href="/about">Детайли</Link>
           <Link href="/services">Галерия</Link>
-          <Link href="/contact">Налични Дати</Link>
-          <Link href="/contact">Ценоразпис</Link>
+          <Link href="/AvailableDates">Налични Дати</Link>
+          <Link href="/PriceList">Ценоразпис</Link>
           <Link href="/contact">Контакти</Link>
           <Link href="/reviews">Ревюта</Link>
         </div>
@@ -69,7 +69,7 @@ const NavBar = () => {
             <Link href="/contact" onClick={toggleMenu}>
               Налични Дати
             </Link>
-            <Link href="/contact" onClick={toggleMenu}>
+            <Link href="/PriceList" onClick={toggleMenu}>
               Ценоразпис
             </Link>
             <Link href="/contact" onClick={toggleMenu}>

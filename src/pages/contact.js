@@ -11,8 +11,8 @@ const initValues = {
   lastName: '',
   email: '',
   phoneNumber: '',
-  carMake: '',
-  carModel: '',
+  checkInDate: '',
+  checkOutDate: '',
   typeOfDetail: '',
   additionalDetails: '',
   desiredDate: '',
@@ -207,7 +207,7 @@ const contact = () => {
             </Stack>
           </div>
           <div className={styles.flexDisplay}>
-            <Stack direction='row'>
+            <Stack direction='row' width='100%'>
               <FormControl
                 isRequired
                 isInvalid={
@@ -215,16 +215,16 @@ const contact = () => {
                    * If the input has been touched and there is no data inside of it, sets the error 
                    * border color to red and displays form error message
                    */
-                  touched.carMake && !values.carMake
+                  touched.checkInDate && !values.checkInDate
                 }
                 mb={5}>
                 <Flex flexDirection='column' alignItems='center'>
-                  <FormLabel className={styles.Text}>Марка</FormLabel>
+                  <FormLabel className={styles.Text}>Настаняване</FormLabel>
                   <Input
-                    type='text'
-                    name='carMake'
+                    type='date'
+                    name='checkinDate'
                     className={styles.Text}
-                    value={values.carMake}
+                    value={values.checkInDate}
                     onChange={handleInputChange}
                     errorBorderColor="red.300"
                     onBlur={onBlur}
@@ -239,15 +239,15 @@ const contact = () => {
                    * If the input has been touched and there is no data inside of it, sets the error 
                    * border color to red and displays form error message
                    */
-                  touched.carModel && !values.carModel
+                  touched.checkOutDate && !values.checkOutDate
                 }
-                mb={5}>
+                mb={5} mt={3}>
                 <Flex flexDirection='column' alignItems='center'>
-                  <FormLabel className={styles.Text}>Модел</FormLabel>
+                  <FormLabel className={styles.Text}>Освобождаване</FormLabel>
                   <Input
-                    type='text'
-                    name='carModel'
-                    value={values.carModel}
+                    type='date'
+                    name='checkoutDate'
+                    value={values.checkOutDate}
                     className={styles.Text}
                     onChange={handleInputChange}
                     errorBorderColor="red.300"
@@ -258,37 +258,9 @@ const contact = () => {
               </FormControl>
             </Stack>
           </div>
-          <FormControl isRequired>
-            <Flex flexDirection='column' alignItems='center'>
-              <FormLabel className={styles.Text}>Услуга</FormLabel>
-              <Select
-                placeholder=" "
-                name='typeOfDetail'
-                value={values.typeOfDetail}
-                className={styles.selectControl}
-                onChange={handleInputChange}
-                onBlur={onBlur}
-                maxWidth='450px'
-              >
-                <option>Корекция на лаковото покритие</option>
-                <option>Керамични покрития</option>
-                <option>Поддръжка на керамично покритие</option>
-                <option>One Step</option>
-                <option>Измиване</option>
-                <option>Корекция на фарове</option>
-                <option>Корекция на стопове</option>
-                <option>Детайлно почистване на интериор</option>
-                <option>Почистване на стъкла + покритие</option>
-                <option>Почистване на двигателен отсек</option>
-                <option>Почистване на джанти</option>
-                <option>Освежаване на спирачни апарати</option>
-                <option>Пастиране / Полиране / Почистване на мотори, костюми и предпазни каски</option>
-              </Select>
-            </Flex>
-          </FormControl>
           <FormControl mt={3} mb={5}>
             <Flex flexDirection='column' alignItems='center'>
-              <FormLabel className={styles.Text}>Доп. Коментари</FormLabel>
+              <FormLabel className={styles.Text}>Въпрос/ Запитване</FormLabel>
               <Textarea
                 type='text'
                 name='additionalDetails'
@@ -299,24 +271,20 @@ const contact = () => {
               />
             </Flex>
           </FormControl>
-          <FormControl isRequired mb={5}>
-            <Flex flexDirection='column' justifyContent='center' alignItems='center'>
-              <FormLabel className={styles.Text}>Желана Дата</FormLabel>
-              <Input
-                type='date'
-                name='desiredDate'
-                value={values.desiredDate}
-                className={styles.Text}
-                onChange={handleInputChange}
-                maxWidth='450px' />
-            </Flex>
-          </FormControl>
           <Flex>
             <Button style={{ backgroundColor: "black" }}
               className={styles.SubmitButton}
               isLoading={isLoading}
               onClick={onSubmit}
-            >Запази</Button>
+            >Изпращане</Button>
+          </Flex>
+          <Flex justifyContent='center' mt={4}>
+            <Text fontSize="md" className={styles.callUsText}>
+              или ни се обадете на&nbsp;
+              <a href="tel:+359889301414" className={styles.callLink}>
+              +359889301414
+              </a>
+            </Text>
           </Flex>
         </div>
       </div>

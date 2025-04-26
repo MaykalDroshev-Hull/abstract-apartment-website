@@ -40,8 +40,8 @@ const Footer = () => {
         <Link href="/">Начало</Link>
           <Link href="/about">Детайли</Link>
           <Link href="/services">Галерия</Link>
-          <Link href="/contact">Налични Дати</Link>
-          <Link href="/contact">Ценоразпис</Link>
+          <Link href="/AvailableDates">Налични Дати</Link>
+          <Link href="/PriceList">Ценоразпис</Link>
           <Link href="/contact">Контакти</Link>
           <Link href="/reviews">Ревюта</Link>
         </div>
