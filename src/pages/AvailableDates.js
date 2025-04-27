@@ -3,6 +3,8 @@ import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameM
 import { bg } from "date-fns/locale"; // Bulgarian locale
 import styles from "../styles/Page Styles/AvailableDates.module.css"; // Your styles
 import { parseISO } from "date-fns"; // For converting date strings to Date objects
+import Meta from "@/components/Page Components/Meta";
+import PageTitle from "@/components/Page Components/PageTitle";
 
 const generateDays = (startDate, months = 1) => {
     const days = [];
@@ -57,35 +59,78 @@ const AvailableDates = () => {
     };
 
     return (
-        <div className={styles.calendarContainer}>
-            <div className={styles.calendarHeader}>
-                <button className={styles.calendarButton} onClick={handlePrevMonth}>&lt;</button>
-                <h2 className={styles.header}>{format(currentMonth, "MMMM yyyy", { locale: bg })}</h2>
-                <button className={styles.calendarButton} onClick={handleNextMonth}>&gt;</button>
+        <>
+            <Meta title="Налични Дати" />
+            <div className={styles.calendarContainer}>
+                <div className={styles.calendarHeader}>
+                    <button className={styles.calendarButton} onClick={handlePrevMonth}>&lt;</button>
+                    <h2 className={styles.header}>{format(currentMonth, "MMMM yyyy", { locale: bg })}</h2>
+                    <button className={styles.calendarButton} onClick={handleNextMonth}>&gt;</button>
 
-            </div>
-            {days.map((monthDays, monthIndex) => (
-                <div key={monthIndex} className={styles.monthContainer}>
-                    <div className={styles.weekdays}>
-                        {["П", "В", "С", "Ч", "П", "С", "Н"].map((day) => (
-                            <div key={day} className={styles.weekday}>
-                                {day}
-                            </div>
-                        ))}
-                    </div>
-                    <div className={styles.dayGrid}>
-                        {monthDays.map((day) => (
-                            <div
-                                key={day}
-                                className={`${styles.day} ${isAvailable(day) ? styles.available : ''} ${isToday(day) ? styles.today : ''}`}
-                            >
-                                {format(day, "d")}
-                            </div>
-                        ))}
-                    </div>
                 </div>
-            ))}
-        </div>
+                {days.map((monthDays, monthIndex) => (
+                    <div key={monthIndex} className={styles.monthContainer}>
+                        <div className={styles.weekdays}>
+                            {["П", "В", "С", "Ч", "П", "С", "Н"].map((day) => (
+                                <div key={day} className={styles.weekday}>
+                                    {day}
+                                </div>
+                            ))}
+                        </div>
+                        <div className={styles.dayGrid}>
+                            {(() => {
+                                const firstDayOfMonth = monthDays[0];
+                                const weekdayIndex = (firstDayOfMonth.getDay() + 6) % 7; // Adjust to Monday first
+
+                                const placeholders = Array.from({ length: weekdayIndex });
+
+                                return (
+                                    <>
+                                        {placeholders.map((_, index) => (
+                                            <div key={`empty-${index}`} className={styles.emptyDay}></div>
+                                        ))}
+                                        {monthDays.map((day) => {
+                                            const isPastDay = day < new Date(new Date().setHours(0, 0, 0, 0)); // Today at 00:00
+
+                                            return (
+                                                <div
+                                                    key={day.toString()}
+                                                    className={`
+                ${styles.day}
+                ${isAvailable(day) ? styles.available : ''}
+                ${isToday(day) ? styles.today : ''}
+                ${isPastDay ? styles.pastDay : ''}
+              `}
+                                                >
+                                                    {format(day, "d")}
+                                                </div>
+                                            );
+                                        })}
+                                    </>
+                                );
+                            })()}
+                        </div>
+
+
+                    </div>
+                ))}
+            </div>
+            <div className={styles.legendContainer}>
+                <div className={styles.legendItem}>
+                    <div className={`${styles.legendColor} ${styles.todayColor}`}></div>
+                    <span>Днес</span>
+                </div>
+                <div className={styles.legendItem}>
+                    <div className={`${styles.legendColor} ${styles.availableColor}`}></div>
+                    <span>Свободно</span>
+                </div>
+                <div className={styles.legendItem}>
+                    <div className={`${styles.legendColor} ${styles.unavailableColor}`}></div>
+                    <span>Не е налично</span>
+                </div>
+            </div>
+
+        </>
     );
 };
 

@@ -201,3 +201,59 @@
     font-size: 1.2rem;
   }
 }
+.bookingBar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.bookingField {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  flex: 1;
+  min-width: 150px;
+}
+
+.bookingField label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+  font-size: 0.9rem;
+}
+
+.bookingField input,
+.bookingField select {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+/* Make booking bar more mobile friendly */
+@media (max-width: 756px) {
+  .bookingBar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 15px;
+    gap: 20px;
+  }
+
+  .bookingField {
+    width: 100%;
+  }
+
+  .bookingField input,
+  .bookingField select {
+    font-size: 1.1rem;
+    padding: 10px 14px;
+  }
+}

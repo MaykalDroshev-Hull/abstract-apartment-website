@@ -4,7 +4,7 @@ import styles from '../styles/Page Styles/Index.module.css'
 import buttonStyles from '../styles/Component Styles/FlowButton.module.css'
 import Link from "next/link";
 import BookingBar from '@/components/Layout Components/BookingBar';
-
+import PageTitle from "@/components/Page Components/PageTitle";
 /**
  * Home component that renders the homepage of the website.
  * @returns {JSX.Element} The JSX element to be rendered.
@@ -16,7 +16,7 @@ const Home = () => {
 
   return (
     <>
-      <Meta />
+<Meta title="Апартамент Абстракт" />
       <div className={styles.heroSection}>
         <img
           src="/Images/index/DEMO-hero-image.jpg"

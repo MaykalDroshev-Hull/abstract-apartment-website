@@ -1,53 +1,64 @@
-.container {
-  background-color: #FFFDD0;
-  color: white;
-  /* Default text color */
-  display: flex;
-  flex-direction: column;
-  /* Stack items vertically */
-  align-items: center;
-  /* Center items horizontally */
-  padding: 20px;
-  /* Add spacing around the container */
-  margin: 0 auto;
-  /* Center the container horizontally */
+.aboutContainer {
+  padding: 40px 20px;
   max-width: 1200px;
-  /* Optional: Limit the width of the content */
+  margin: auto;
 }
 
-.container p {
-  white-space: pre-wrap;
-  /* Preserve line breaks */
-  font-size: 20px;
-  margin: 20px auto;
-  /* Add vertical spacing between elements */
-  width: 80%;
-  /* Limit text width for better readability */
-  color: gray;
-  font-weight: 400;
-  /* Use lighter font for readability */
-  line-height: 1.6;
-  /* Adjust line height for better spacing */
+.featuresSection {
+  margin-top: 40px;
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-/* Responsive Design */
-@media only screen and (max-width: 768px) {
-  .container p {
-    font-size: 18px;
-    width: 90%;
-    /* Make text slightly wider on smaller screens */
-  }
+.sectionTitle {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #333;
+  text-align: center;
 }
 
-@media only screen and (max-width: 430px) {
-  .container p {
-    font-size: 16px;
-    width: 90%;
-  }
+.featureList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  padding: 20px;
 }
 
-@media only screen and (max-width: 320px) {
-  .container p {
-    font-size: 14px;
+.featureItem {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.featureItem:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.featureIcon {
+  width: 28px;
+  height: 28px;
+  color: black;
+  transition: transform 0.3s ease;
+}
+
+.featureItem:hover .featureIcon {
+  transform: scale(1.2) rotate(5deg);
+}
+
+
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .featureList {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from '../styles/Page Styles/Reviews.module.css';
+import Meta from '@/components/Page Components/Meta'
 
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);
@@ -19,6 +20,9 @@ const Reviews = () => {
   }, []);
 
   return (
+    <>
+    <Meta title="Ревюта" />
+
     <div className={styles.reviewSection}>
       <h2 className={styles.sectionTitle}>Какво казват нашите гости</h2>
       <div className={styles.reviewGrid}>
@@ -60,7 +64,7 @@ const Reviews = () => {
           Оставете вашия отзив
         </button>
       </a>
-    </div>
+    </div></>
   );
 
 };

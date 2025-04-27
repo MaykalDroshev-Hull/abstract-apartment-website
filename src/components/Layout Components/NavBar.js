@@ -66,7 +66,7 @@ const NavBar = () => {
             <Link href="/services" onClick={toggleMenu}>
               Галерия
             </Link>
-            <Link href="/contact" onClick={toggleMenu}>
+            <Link href="/AvailableDates" onClick={toggleMenu}>
               Налични Дати
             </Link>
             <Link href="/PriceList" onClick={toggleMenu}>

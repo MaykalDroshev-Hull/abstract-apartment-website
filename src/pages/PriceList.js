@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "../styles/Page Styles/PriceList.module.css";
+import Meta from '@/components/Page Components/Meta'
 
 const months = [
     { name: "Май", price: 120, reasons: ["- Най-хубавото време за почивка", "- По-ниски цени", "- По-малко туристи"] },
@@ -25,6 +26,9 @@ const PriceList = () => {
     const [showCurrencies, setShowCurrencies] = useState(false);
 
     return (
+        <>
+            <Meta title="Ценоразпис" />
+
         <div className={styles.container}>
             <div className={`${styles.currencySelector} ${showCurrencies ? styles.show : ""}`}>
                 {currencies.map((currency) => (
@@ -49,7 +53,7 @@ const PriceList = () => {
                 <b>$</b>
             </button>
 
-            <h2 className={styles.title}>Ценова Листа</h2>
+            <h2 className={styles.title}>Ценоразпис</h2>
 
             <div className={styles.monthsList}>
                 {months.map((month, index) => (
@@ -89,6 +93,7 @@ const PriceList = () => {
                 </ul>
             </div>
         </div>
+        </>
     );
 };
 
