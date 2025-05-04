@@ -197,6 +197,8 @@
   }
 
   .mobileNavLinks {
+    pointer-events: none;
+    visibility: hidden;
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -224,6 +226,8 @@
     /* Show links when menu is open */
     opacity: 1;
     transform: translateY(0);
+    pointer-events: auto;
+    visibility: visible;
   }
 
   .mobileNavLinks a {

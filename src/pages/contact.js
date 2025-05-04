@@ -4,6 +4,7 @@ import PageTitle from "@/components/Page Components/PageTitle"
 import { Text, Button, Flex, FormControl, FormErrorMessage, FormLabel, Input, Select, Stack, Textarea, useToast, background } from "@chakra-ui/react"
 import { sendLongContactForm } from "@/lib/api"
 import styles from '../styles/Page Styles/Contact.module.css'
+import { set } from "react-hook-form"
 
 //An object containing initial values for the form fields
 const initValues = {
@@ -48,7 +49,17 @@ const contact = () => {
         [target.name]: target.value,
       },
     }));
-
+    const setDatesManually = (checkIn, checkOut) => {
+      setFormState((prev) => ({
+        ...prev,
+        values: {
+          ...prev.values,
+          checkInDate: checkIn || prev.values.checkInDate,
+          checkOutDate: checkOut || prev.values.checkOutDate,
+        },
+      }));
+    };
+    
   //Function to submit the data to be handles by the API
   const onSubmit = async () => {
     setFormState(prev => ({
@@ -225,7 +236,7 @@ const contact = () => {
                     name='checkinDate'
                     className={styles.Text}
                     value={values.checkInDate}
-                    onChange={handleInputChange}
+                    onChange={setDatesManually}
                     errorBorderColor="red.300"
                     onBlur={onBlur}
                   />
@@ -249,7 +260,7 @@ const contact = () => {
                     name='checkoutDate'
                     value={values.checkOutDate}
                     className={styles.Text}
-                    onChange={handleInputChange}
+                    onChange={setDatesManually}
                     errorBorderColor="red.300"
                     onBlur={onBlur}
                   />
@@ -281,9 +292,15 @@ const contact = () => {
           <Flex justifyContent='center' mt={4}>
             <Text fontSize="md" className={styles.callUsText}>
               или ни се обадете на&nbsp;
-              <a href="tel:+359889301414" className={styles.callLink}>
-              +359889301414
+              <br></br>
+              <a href="tel:+359886790681" className={styles.callLink}>
+              +359886790681 - Ники
+             
+              </a><br></br>
+              <a href="tel:+359884535509" className={styles.callLink}>
+              +359884535509 - Кика
               </a>
+              
             </Text>
           </Flex>
         </div>

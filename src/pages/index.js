@@ -5,6 +5,9 @@ import buttonStyles from '../styles/Component Styles/FlowButton.module.css'
 import Link from "next/link";
 import BookingBar from '@/components/Layout Components/BookingBar';
 import PageTitle from "@/components/Page Components/PageTitle";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react"; // Add useState + useEffect
+
 /**
  * Home component that renders the homepage of the website.
  * @returns {JSX.Element} The JSX element to be rendered.
@@ -12,6 +15,16 @@ import PageTitle from "@/components/Page Components/PageTitle";
 const Home = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const router = useRouter();
+  const { checkin } = router.query;
+
+  const [checkinDate, setCheckinDate] = useState("");
+
+  useEffect(() => {
+    if (checkin) {
+      setCheckinDate(checkin);
+    }
+  }, [checkin]);
 
 
   return (
@@ -28,7 +41,7 @@ const Home = () => {
             <h1>Комфорт. Стил. Уют –</h1>
             <p>Защото Вашият престой заслужава най-доброто.</p>
             <br /><br /><br />
-            <BookingBar />
+            <BookingBar prefillCheckin={checkinDate} /> {/* Pass the date here */}
           </div>
         </div>
       </div>

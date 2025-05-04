@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameMonth, isToday } from "date-fns";
 import { bg } from "date-fns/locale"; // Bulgarian locale
+import { useNavigate } from 'react-router-dom'; // Importing the useNavigate hook
 import styles from "../styles/Page Styles/AvailableDates.module.css"; // Your styles
 import { parseISO } from "date-fns"; // For converting date strings to Date objects
 import Meta from "@/components/Page Components/Meta";
 import PageTitle from "@/components/Page Components/PageTitle";
+import { useRouter } from "next/router";
 
 const generateDays = (startDate, months = 1) => {
     const days = [];
@@ -19,6 +21,8 @@ const generateDays = (startDate, months = 1) => {
 const AvailableDates = () => {
     const [availableDates, setAvailableDates] = useState([]);
     const [currentMonth, setCurrentMonth] = useState(new Date()); // Tracks current month to display
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
 
     // Load booking data from the XML file
     useEffect(() => {
@@ -58,6 +62,16 @@ const AvailableDates = () => {
         return availableDates.includes(format(date, "yyyy-MM-dd"));
     };
 
+    const handleDateClick = (date) => {
+        const formattedDate = format(date, "yyyy-MM-dd");
+        setLoading(true); // Show the loading popup
+
+        setTimeout(() => {
+            router.push(`/?checkin=${formattedDate}`);
+        }, 1500); // 1.5-second delay
+    };
+
+
     return (
         <>
             <Meta title="Налични Дати" />
@@ -66,7 +80,6 @@ const AvailableDates = () => {
                     <button className={styles.calendarButton} onClick={handlePrevMonth}>&lt;</button>
                     <h2 className={styles.header}>{format(currentMonth, "MMMM yyyy", { locale: bg })}</h2>
                     <button className={styles.calendarButton} onClick={handleNextMonth}>&gt;</button>
-
                 </div>
                 {days.map((monthDays, monthIndex) => (
                     <div key={monthIndex} className={styles.monthContainer}>
@@ -96,11 +109,12 @@ const AvailableDates = () => {
                                                 <div
                                                     key={day.toString()}
                                                     className={`
-                ${styles.day}
-                ${isAvailable(day) ? styles.available : ''}
-                ${isToday(day) ? styles.today : ''}
-                ${isPastDay ? styles.pastDay : ''}
-              `}
+                                                        ${styles.day}
+                                                        ${isAvailable(day) ? styles.available : ''}
+                                                        ${isToday(day) ? styles.today : ''}
+                                                        ${isPastDay ? styles.pastDay : ''}
+                                                    `}
+                                                    onClick={() => isAvailable(day) && handleDateClick(day)}
                                                 >
                                                     {format(day, "d")}
                                                 </div>
@@ -110,8 +124,6 @@ const AvailableDates = () => {
                                 );
                             })()}
                         </div>
-
-
                     </div>
                 ))}
             </div>
@@ -129,8 +141,17 @@ const AvailableDates = () => {
                     <span>Не е налично</span>
                 </div>
             </div>
+            {loading && (
+                <div className={styles.loadingOverlay}>
+                    <div className={styles.loadingPopup}>
+                        <div className={styles.spinner}></div>
+                        <p>Пренасочване към страницата за резервация...</p>
+                    </div>
+                </div>
+            )}
 
         </>
+
     );
 };
 

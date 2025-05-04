@@ -6,7 +6,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 
 
-const BookingBar = () => {
+const BookingBar = ({ prefillCheckin }) => {
   const guestRef = useRef(null);
   const [checkIn, setCheckIn] = useState(null);
   const [checkOut, setCheckOut] = useState(null);
@@ -21,19 +21,28 @@ const BookingBar = () => {
         setShowGuestOptions(false);
       }
     };
-  
+
     if (showGuestOptions) {
       document.addEventListener('mousedown', handleClickOutside);
     } else {
       document.removeEventListener('mousedown', handleClickOutside);
     }
-  
+
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [showGuestOptions]);
   
+  useEffect(() => {
+    if (prefillCheckin) {
+      const parsedDate = new Date(prefillCheckin);
+      if (!isNaN(parsedDate)) {
+        setCheckIn(parsedDate);
+      }
+    }
+  }, [prefillCheckin]);
   
+
   const generateDays = (monthDate) => {
     const start = startOfMonth(monthDate);
     const end = endOfMonth(monthDate);
@@ -67,8 +76,11 @@ const BookingBar = () => {
           setShowGuestOptions(false); // 👈 close guests when opening calendar
         }}>
           <label>Настаняване</label>
-          {checkIn ? format(checkIn, 'dd MMM yyyy', { locale: bg }) : 'Изберете'}
+          <div className={styles.dateValue}>
+            {checkIn ? format(checkIn, 'dd MMM yyyy', { locale: bg }) : 'Изберете'}
           </div>
+
+        </div>
         <div className={styles.field} onClick={() => {
           if (checkIn) {
             setShowCalendar(!showCalendar);
@@ -76,8 +88,11 @@ const BookingBar = () => {
           }
         }}>
           <label>Напускане</label>
-          {checkOut ? format(checkOut, 'dd MMM yyyy', { locale: bg }) : 'Изберете'}
+          <div className={styles.dateValue}>
+            {checkOut ? format(checkOut, 'dd MMM yyyy', { locale: bg }) : 'Изберете'}
           </div>
+
+        </div>
         <div className={styles.field} onClick={() => {
           setShowGuestOptions(!showGuestOptions);
           setShowCalendar(false); // 👈 close calendar when opening guests
@@ -117,32 +132,94 @@ const BookingBar = () => {
 
       {showGuestOptions && (
         <div className={styles.guestOptions} ref={guestRef}>
-          <div>
+          <div className={styles.guestRow}>
             <label>Възрастни</label>
-            <input
-              type="number"
-              value={guests.adults}
-              min="1"
-              onChange={(e) => setGuests({ ...guests, adults: +e.target.value })}
-            />
+            <div className={styles.stepper}>
+              <button
+                onClick={() =>
+                  setGuests((prev) => ({
+                    ...prev,
+                    adults: Math.max(1, prev.adults - 1),
+                  }))
+                }
+              >
+                -
+              </button>
+              <span>{guests.adults}</span>
+              <button
+                onClick={() =>
+                  setGuests((prev) => {
+                    const total = prev.adults + prev.children;
+                    if (prev.adults < 6 && total < 6) {
+                      return { ...prev, adults: prev.adults + 1 };
+                    }
+                    return prev;
+                  })
+                }
+                disabled={guests.adults >= 6 || guests.adults + guests.children >= 6}
+              >
+                +
+              </button>
+            </div>
           </div>
-          <div>
+          <div className={styles.guestRow}>
             <label>Деца</label>
-            <input
-              type="number"
-              value={guests.children}
-              min="0"
-              onChange={(e) => setGuests({ ...guests, children: +e.target.value })}
-            />
+            <div className={styles.stepper}>
+              <button
+                onClick={() =>
+                  setGuests((prev) => ({
+                    ...prev,
+                    children: Math.max(0, prev.children - 1),
+                  }))
+                }
+              >
+                -
+              </button>
+              <span>{guests.children}</span>
+              <button
+                onClick={() =>
+                  setGuests((prev) => {
+                    const total = prev.adults + prev.children;
+                    if (prev.children < 5 && total < 6) {
+                      return { ...prev, children: prev.children + 1 };
+                    }
+                    return prev;
+                  })
+                }
+                disabled={guests.children >= 5 || guests.adults + guests.children >= 6}
+              >
+                +
+              </button>
+            </div>
           </div>
-          <div>
+
+          <div className={styles.guestRow}>
             <label>Бебета</label>
-            <input
-              type="number"
-              value={guests.infants}
-              min="0"
-              onChange={(e) => setGuests({ ...guests, infants: +e.target.value })}
-            />
+            <div className={styles.stepper}>
+              <button
+                onClick={() =>
+                  setGuests((prev) => ({
+                    ...prev,
+                    infants: Math.max(0, prev.infants - 1),
+                  }))
+                }
+              >
+                -
+              </button>
+              <span>{guests.infants}</span>
+              <button
+                onClick={() =>
+                  setGuests((prev) =>
+                    prev.infants < 5
+                      ? { ...prev, infants: prev.infants + 1 }
+                      : prev
+                  )
+                }
+                disabled={guests.infants >= 5}
+              >
+                +
+              </button>
+            </div>
           </div>
           <div className={styles.petsDisabled}>
             <input type="checkbox" disabled /> <label>Домашни Любимци</label>

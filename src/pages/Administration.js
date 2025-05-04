@@ -28,7 +28,23 @@ const Administration = () => {
     }
     setDates(generatedDates);
   }, []);
-
+  
+  useEffect(() => {
+    const fetchBookedDates = async () => {
+      try {
+        const res = await fetch('/api/load-bookings');
+        const data = await res.json();
+        if (data.success) {
+          setBookedDates(data.bookedDates);
+        }
+      } catch (err) {
+        console.error('Failed to load bookings:', err);
+      }
+    };
+  
+    fetchBookedDates();
+  }, []);
+  
   const toggleBooked = (date) => {
     setBookedDates((prev) => ({
       ...prev,
@@ -36,9 +52,26 @@ const Administration = () => {
     }));
   };
 
-  const handleSave = () => {
-    console.log('Saved booked dates:', bookedDates);
-    alert('Booking data saved!');
+  const handleSave = async () => {
+    const bookingsToSave = dates.map((date) => ({
+      date,
+      isBooked: bookedDates[date] || false,
+    }));
+
+    const response = await fetch('/api/save-bookings', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ bookings: bookingsToSave }),
+    });
+
+    const result = await response.json();
+    if (result.success) {
+      alert('Booking data saved!');
+    } else {
+      alert('Failed to save booking data.');
+    }
   };
 
   const getCalendarData = () => {
@@ -61,10 +94,7 @@ const Administration = () => {
   const handleLogin = () => {
     const envUsername = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
     const envPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
-    if (
-      usernameInput === envUsername &&
-      passwordInput === envPassword
-    ) {
+    if (usernameInput === envUsername && passwordInput === envPassword) {
       setIsAuthenticated(true);
     } else {
       alert('Incorrect credentials');

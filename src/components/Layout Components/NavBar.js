@@ -21,7 +21,11 @@ const NavBar = () => {
         <div className={styles.contactDetails}>
           <div className={styles.contactItem}>
             <FontAwesomeIcon icon={faPhone} className={styles.icon} />
-            <a href="tel:+359889301414">+359889301414</a>
+            <a href="tel:+359886790681">+359886790681 - Ники</a>
+          </div>
+          <div className={styles.contactItem}>
+            <FontAwesomeIcon icon={faPhone} className={styles.icon} />
+            <a href="tel:+359884535509">+359884535509 - Кика</a>
           </div>
           <div className={styles.contactItem}>
             <FontAwesomeIcon icon={faEnvelope} className={styles.icon} />
