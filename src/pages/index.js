@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react"; // Add useState + useEffect
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import React from 'react';
 
 /**
  * Home component that renders the homepage of the website.
@@ -52,14 +53,16 @@ const Home = () => {
 <div className={styles.whyChooseUs}>
   <div className={styles.textBlock}>
     <h3>{t('whyUs.card1.title')}</h3>
-    <p>{t('whyUs.card1.text')}</p>
-    <img src="/Images/index/Why-us-1.png" alt="Quality Service" className={styles.whyChooseImage} />
-  </div>
+    <p>
+  {t('whyUs.card1.text').split('\n').map((line, index) => (
+    <React.Fragment key={index}>
+      {line}
+      <br />
+    </React.Fragment>
+  ))}
+</p>
 
-  <div className={styles.textBlock}>
-    <h3>{t('whyUs.card2.title')}</h3>
-    <p>{t('whyUs.card2.text')}</p>
-    <img src="/Images/index/Why-us-2.png" alt="Trusted Professionals" className={styles.whyChooseImage} />
+    <img src="/Images/index/Why-us-1.png" alt="Quality Service" className={styles.whyChooseImage} />
   </div>
 </div>
     </>

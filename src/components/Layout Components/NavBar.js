@@ -36,7 +36,7 @@ const NavBar = () => {
           </div>
           <div className={styles.contactItem}>
             <FontAwesomeIcon icon={faEnvelope} className={styles.icon} />
-            <a href="mailto:abstract_apartment@abv.bg">abstract_apartment@abv.bg</a>
+            <a href="mailto:abstract.apartments@gmail.com">abstract.apartments@gmail.com</a>
           </div>
         </div>
       </div>

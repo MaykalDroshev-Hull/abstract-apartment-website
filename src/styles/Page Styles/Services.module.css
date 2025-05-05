@@ -1,118 +1,52 @@
-/* Services.module.css */
-.servicesPage {
-  background-color: #F9F7F7;
-  /* Black background for contrast */
-  color: black;
-  /* White text */
-  padding: 20px;
-  /* Add some padding for spacing */
-}
-
-.pageTitle {
-  font-size: 2.5rem;
-  /* Large title font */
-  text-align: center;
-  /* Center the title */
-  margin-bottom: 40px;
-  /* Add spacing below the title */
-  border-bottom: 2px solid white;
-  /* Optional underline for title */
-  padding-bottom: 10px;
-}
-
-.serviceSection {
+.tabContainer {
   display: flex;
-  align-items: center;
-  /* Vertically align text and image */
-  margin-bottom: 50px;
-  /* Spacing between sections */
-}
-
-.text {
-  flex: 1;
-  /* Take equal space with the image */
-  padding: 20px;
-  /* Add padding for better readability */
-  margin: 0 50px;
-}
-
-.text h2 {
-  font-size: 1.8rem;
-  /* Service title size */
-  margin-bottom: 10px;
-  /* Space below the title */
-  font-weight: bold;
-  color: #f5c501;
-}
-
-.text p {
-  font-size: 1.1rem;
-  /* Description size */
-  line-height: 1.5;
-  /* Better readability for text */
-}
-
-.imagePlaceholder {
-  width: 40%;
-  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   justify-content: center;
-  align-items: center;
-  padding: 20px;
-  margin-bottom: 20px;
+  margin: 1rem 0;
 }
 
-.imagePlaceholder img {
+.tabButton {
+  padding: 0.6rem 1rem;
+  border: none;
+  background: #eee;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-weight: 500;
+}
+
+.tabButton:hover {
+  background: #ddd;
+}
+
+.active {
+  background: black;
+  color: white;
+}
+
+.sliderContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.slide {
+  display: flex !important;
+  justify-content: center;
+}
+
+.image {
   width: 100%;
-  /* Ensure images are responsive */
-  height: auto;
-  /* Maintain image aspect ratio */
-  border-radius: 8px;
-  /* Optional rounded corners */
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5);
-  /* Subtle shadow for the images */
+  max-height: 500px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
 }
 
-/* Style for alternating layouts */
-.imageRight {
-  flex-direction: row;
-  /* Text on the left, image on the right */
-}
-
-.imageLeft {
-  flex-direction: row-reverse;
-  /* Text on the right, image on the left */
-}
-
-/* Mobile Version */
-@media only screen and (max-width: 768px) {
-  .serviceSection {
-    flex-direction: column;
-    /* Stack image and text vertically */
-  }
-
-  .imagePlaceholder {
-    width: 100%;
-    /* Image takes up most of the screen width */
-    margin: 0 auto 20px auto;
-    /* Center the image with margin below */
-  }
-
-  .text {
-    width: 90%;
-    /* Text takes up most of the screen width */
-    margin: 0 auto;
-    /* Center the text block */
-    padding: 10px;
-    /* Reduce padding for better fit */
-  }
-
-  .text h2 {
-    font-size: 1.5rem;
-    /* Adjust title size for smaller screens */
-  }
-
-  .text p {
-    font-size: 1rem;
-    /* Adjust text size for smaller screens */
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .image {
+    max-height: 300px;
   }
 }

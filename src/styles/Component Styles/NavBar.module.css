@@ -243,3 +243,36 @@
     display: none;
   }
 }
+.langButton {
+  font-weight: 700;
+  color: black;
+  text-decoration: none;
+  position: relative;
+}
+
+.langButton:hover {
+  color: black;
+}
+.langButton::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 2px;
+  background-color: black;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.langButton:hover {
+  color: black;
+}
+
+.langButton:hover::after,
+.langButton.active::after {
+  width: 100%;
+  opacity: 1;
+}

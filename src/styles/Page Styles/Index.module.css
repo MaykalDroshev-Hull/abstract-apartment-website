@@ -64,7 +64,7 @@
   align-items: stretch;
   margin: 50px auto;
   padding: 20px;
-  width: 90%;
+  width: 60%;
 }
 
 .whyChooseUsHeader h1 {
@@ -160,6 +160,7 @@
   .whyChooseUs {
     display: grid;
     align-items: center;
+    width: 90%;
   }
 
   .section {

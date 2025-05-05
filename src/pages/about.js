@@ -19,7 +19,7 @@ const About = () => {
       <PageTitle title={t('details.pageTitle')} />
 
       <div className={styles.aboutContainer}>
-        <AboutCarousel />
+        {/* <AboutCarousel /> */}
 
         <section className={styles.featuresSection}>
           <h2 className={styles.sectionTitle}>{t('details.sectionTitle')}</h2>
