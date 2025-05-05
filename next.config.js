@@ -1,9 +1,8 @@
-/** @type {import('next').NextConfig} */
-
-// const { i18n } = require("./next-i18next.config.js");
-const nextConfig = {
-  reactStrictMode: true,
-  // i18n,
+/** @type {import('next-i18next').UserConfig} */
+module.exports = {
+  i18n: {
+    defaultLocale: 'bg',
+    locales: ['bg', 'en'],
+  },
+  reloadOnPrerender: process.env.NODE_ENV === 'development',
 };
-
-module.exports = nextConfig;

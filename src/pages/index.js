@@ -7,6 +7,8 @@ import BookingBar from '@/components/Layout Components/BookingBar';
 import PageTitle from "@/components/Page Components/PageTitle";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react"; // Add useState + useEffect
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 /**
  * Home component that renders the homepage of the website.
@@ -19,6 +21,7 @@ const Home = () => {
   const { checkin } = router.query;
 
   const [checkinDate, setCheckinDate] = useState("");
+  const { t } = useTranslation('common');
 
   useEffect(() => {
     if (checkin) {
@@ -29,49 +32,45 @@ const Home = () => {
 
   return (
     <>
-<Meta title="Апартамент Абстракт" />
-      <div className={styles.heroSection}>
-        <img
-          src="/Images/index/DEMO-hero-image.jpg"
-          alt="Luxury Car Detailing"
-          className={styles.heroImage}
-        />
-        <div className={styles.overlayContent}>
-          <div className={styles.slogan}>
-            <h1>Комфорт. Стил. Уют –</h1>
-            <p>Защото Вашият престой заслужава най-доброто.</p>
-            <br /><br /><br />
-            <BookingBar prefillCheckin={checkinDate} /> {/* Pass the date here */}
-          </div>
-        </div>
-      </div>
-      <div className={styles.whyChooseUsHeader}>
-        <h1>Защо нас?</h1>
-      </div>
-      {/* Why Choose Us Section */}
-      <div className={styles.whyChooseUs}>
+<Meta title={t('metaTitle')} />
+<div className={styles.heroSection}>
+  <img src="/Images/index/DEMO-hero-image.jpg" alt="Luxury Car Detailing" className={styles.heroImage} />
+  <div className={styles.overlayContent}>
+    <div className={styles.slogan}>
+      <h1>{t('slogan.title')}</h1>
+      <p>{t('slogan.subtitle')}</p>
+      <br /><br /><br />
+      <BookingBar prefillCheckin={checkinDate} />
+    </div>
+  </div>
+</div>
 
-        <div className={styles.textBlock}>
-          <h3>Висококачествено обслужване</h3>
-          <p>
-  Нашият луксозен вила в Паралия, Кавала, е идеалното място за вашата лятна почивка. Предлагаме просторен и комфортен апартамент, който може да побере до 6 души (4+2). Със два двойни легла и разтегателен диван, ще се почувствате като у дома си.
-  <br /><br />
-  Осигуряваме всички необходими удобства за безпроблемен престой — климатик, безжичен интернет и модерна кухня. Планирайте своето безгрижно лято в Гърция с нас!
-</p>
-          <img src="/Images/index/Why-us-1.png" alt="Quality Service" className={styles.whyChooseImage} />
-        </div>
-        <div className={styles.textBlock}>
-        <h3>Висококачествено обслужване</h3>
-          <p>
-  Нашият луксозен вила в Паралия, Кавала, е идеалното място за вашата лятна почивка. Предлагаме просторен и комфортен апартамент, който може да побере до 6 души (4+2). Със два двойни легла и разтегателен диван, ще се почувствате като у дома си.
-  <br /><br />
-  Осигуряваме всички необходими удобства за безпроблемен престой — климатик, безжичен интернет и модерна кухня. Планирайте своето безгрижно лято в Гърция с нас!
-</p>
-          <img src="/Images/index/Why-us-2.png" alt="Trusted Professionals" className={styles.whyChooseImage} />
-        </div>
-      </div>
+<div className={styles.whyChooseUsHeader}>
+  <h1>{t('whyUs.title')}</h1>
+</div>
+
+<div className={styles.whyChooseUs}>
+  <div className={styles.textBlock}>
+    <h3>{t('whyUs.card1.title')}</h3>
+    <p>{t('whyUs.card1.text')}</p>
+    <img src="/Images/index/Why-us-1.png" alt="Quality Service" className={styles.whyChooseImage} />
+  </div>
+
+  <div className={styles.textBlock}>
+    <h3>{t('whyUs.card2.title')}</h3>
+    <p>{t('whyUs.card2.text')}</p>
+    <img src="/Images/index/Why-us-2.png" alt="Trusted Professionals" className={styles.whyChooseImage} />
+  </div>
+</div>
     </>
   );
 };
 
 export default Home;
+export async function getStaticProps({ locale }) {
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
+}

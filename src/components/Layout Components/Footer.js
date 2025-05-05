@@ -1,23 +1,29 @@
 import Link from 'next/link'
 import { FaFacebook, FaInstagram, FaEnvelope, FaPhone, FaMapMarkerAlt, FaCalendarAlt, FaClock } from 'react-icons/fa'
 import styles from '../../styles/Component Styles/Footer.module.css'
+import { useTranslation } from 'next-i18next';
 
 /**
  * The Footer component displays the footer section of the website, including social icons, menu items, and a wave effect container.
  * @returns {JSX.Element} The JSX code for the Footer component.
  */
 const Footer = () => {
+  const { t } = useTranslation('common');
+  const { i18n } = useTranslation();
+  const isEnglish = i18n.language === 'en';
+
   return (
     <>
       <div className={styles.footer}>
-        <Link href="/"><img className={styles.logo} src='/Images/Logo_Bulgarian.png' alt='logo' /></Link>
+        <Link href="/"><img src={isEnglish ? "/Images/Logo.png" : "/Images/Logo_Bulgarian.png"} alt="Logo" className={styles.logo} /></Link>
+
         <div className={styles.infoSection}>
           <div className={styles.contactItem}>
             <FaMapMarkerAlt className={styles.infoicon} />
             <a href="https://maps.app.goo.gl/Mazqq96okcJZLMNS9" target="_blank" rel="noopener noreferrer">
               <span>Greece, Kavala, Paralia Ofryniou</span>
             </a>
-          </div>    
+          </div>
         </div>
         <div className={styles.socialIcon}>
           <Link href='https://www.facebook.com/profile.php?id=61575061973914'>
@@ -37,19 +43,18 @@ const Footer = () => {
           </Link>
         </div>
         <div className={styles.menu}>
-        <Link href="/">Начало</Link>
-          <Link href="/about">Детайли</Link>
-          <Link href="/services">Галерия</Link>
-          <Link href="/AvailableDates">Налични Дати</Link>
-          <Link href="/PriceList">Ценоразпис</Link>
-          <Link href="/contact">Контакти</Link>
-          <Link href="/reviews">Ревюта</Link>
+          <Link href="/" locale={i18n.language}>{t('nav.home')}</Link>
+          <Link href="/about" locale={i18n.language}>{t('nav.details')}</Link>
+          <Link href="/services" locale={i18n.language}>{t('nav.gallery')}</Link>
+          <Link href="/AvailableDates" locale={i18n.language}>{t('nav.dates')}</Link>
+          <Link href="/PriceList" locale={i18n.language}>{t('nav.pricelist')}</Link>
+          <Link href="/contact" locale={i18n.language}>{t('nav.contact')}</Link>
+          <Link href="/reviews" locale={i18n.language}>{t('nav.reviews')}</Link>
         </div>
-        <p className={styles.p} >Изработка от Майкъл Дрошев</p>
+        <p className={styles.p} >{t('nav.creator')}</p>
       </div>
     </>
   )
 }
-
 
 export default Footer

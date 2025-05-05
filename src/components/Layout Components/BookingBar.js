@@ -1,8 +1,9 @@
 import styles from '../../styles/Component Styles/BookingBar.module.css';
 import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isAfter, isBefore } from 'date-fns';
-import { bg } from 'date-fns/locale';
 import React, { useState, useEffect, useRef } from 'react';
-
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
+import { enUS, bg } from 'date-fns/locale';
 
 
 
@@ -14,6 +15,8 @@ const BookingBar = ({ prefillCheckin }) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const [showGuestOptions, setShowGuestOptions] = useState(false);
   const [guests, setGuests] = useState({ adults: 1, children: 0, infants: 0 });
+  const { i18n } = useTranslation();
+  const currentLocale = i18n.language === 'bg' ? bg : enUS;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -32,7 +35,7 @@ const BookingBar = ({ prefillCheckin }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [showGuestOptions]);
-  
+
   useEffect(() => {
     if (prefillCheckin) {
       const parsedDate = new Date(prefillCheckin);
@@ -41,7 +44,8 @@ const BookingBar = ({ prefillCheckin }) => {
       }
     }
   }, [prefillCheckin]);
-  
+
+  const { t } = useTranslation('common');
 
   const generateDays = (monthDate) => {
     const start = startOfMonth(monthDate);
@@ -75,9 +79,9 @@ const BookingBar = ({ prefillCheckin }) => {
           setShowCalendar(!showCalendar);
           setShowGuestOptions(false); // 👈 close guests when opening calendar
         }}>
-          <label>Настаняване</label>
+          <label>{t('booking.checkin')}</label>
           <div className={styles.dateValue}>
-            {checkIn ? format(checkIn, 'dd MMM yyyy', { locale: bg }) : 'Изберете'}
+            {checkIn ? format(checkIn, 'dd MMM yyyy', { locale: currentLocale }) : t('booking.select')}
           </div>
 
         </div>
@@ -87,9 +91,9 @@ const BookingBar = ({ prefillCheckin }) => {
             setShowGuestOptions(false); // 👈 same here
           }
         }}>
-          <label>Напускане</label>
+          <label>{t('booking.checkout')}</label>
           <div className={styles.dateValue}>
-            {checkOut ? format(checkOut, 'dd MMM yyyy', { locale: bg }) : 'Изберете'}
+            {checkOut ? format(checkOut, 'dd MMM yyyy', { locale: currentLocale }) : t('booking.select')}
           </div>
 
         </div>
@@ -97,10 +101,10 @@ const BookingBar = ({ prefillCheckin }) => {
           setShowGuestOptions(!showGuestOptions);
           setShowCalendar(false); // 👈 close calendar when opening guests
         }}>
-          <label>Гости</label>
-          <div>{guests.adults} Възрастни, {guests.children} Деца</div>
+          <label>{t('booking.guests')}</label>
+          <div>{guests.adults} {t('booking.adults')}, {guests.children} {t('booking.children')}</div>
         </div>
-        <button className={styles.bookButton}>Запази</button>
+        <button className={styles.bookButton}>{t('booking.book')}</button>
       </div>
 
       {showCalendar && (
@@ -133,7 +137,7 @@ const BookingBar = ({ prefillCheckin }) => {
       {showGuestOptions && (
         <div className={styles.guestOptions} ref={guestRef}>
           <div className={styles.guestRow}>
-            <label>Възрастни</label>
+            <label>{t('booking.children')}</label>
             <div className={styles.stepper}>
               <button
                 onClick={() =>
@@ -163,7 +167,7 @@ const BookingBar = ({ prefillCheckin }) => {
             </div>
           </div>
           <div className={styles.guestRow}>
-            <label>Деца</label>
+            <label>{t('booking.children')}</label>
             <div className={styles.stepper}>
               <button
                 onClick={() =>
@@ -194,7 +198,7 @@ const BookingBar = ({ prefillCheckin }) => {
           </div>
 
           <div className={styles.guestRow}>
-            <label>Бебета</label>
+            <label>{t('booking.infants')}</label>
             <div className={styles.stepper}>
               <button
                 onClick={() =>
@@ -222,8 +226,8 @@ const BookingBar = ({ prefillCheckin }) => {
             </div>
           </div>
           <div className={styles.petsDisabled}>
-            <input type="checkbox" disabled /> <label>Домашни Любимци</label>
-            <div className={styles.infoText}>Не позволяваме домашни любимци все още.</div>
+            <input type="checkbox" disabled /> <label>{t('booking.pets')}</label>
+            <div className={styles.infoText}>{t('booking.noPets')}</div>
           </div>
         </div>
       )}

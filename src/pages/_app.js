@@ -3,6 +3,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Nunito } from 'next/font/google'
 import '../styles/globals.css'
 import BackToTop from "@/components/Page Components/BackToTop";
+import { appWithTranslation } from 'next-i18next';
 
 
 //Changing subset of 'Nunito' font to latin and setting it to its own variable
@@ -31,4 +32,4 @@ const MyApp = ({ Component, pageProps }) => (
  * @returns {JSX.Element} - Returns the main component of the application, which is a ChakraProvider with a Layout component and a Component that is passed as a prop to the Layout component.
  */
 
-export default MyApp
+export default appWithTranslation(MyApp);
