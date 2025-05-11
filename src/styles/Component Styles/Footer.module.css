@@ -131,3 +131,22 @@
   gap: 8px;
   /* Adjusts spacing between the icon and the text */
 }
+.mapButton {
+  margin-top: 20px;
+  display: flex;
+  background-color: #000000; /* Google blue */
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.mapButton:hover {
+  background-color: #357ae8;
+}
+
+.infoicon{
+  margin-top:3px ;
+}
