@@ -70,7 +70,9 @@
     "checkOutTime": "До 11:00 часа.",
     "smokingPolicy": "Забранено във всички помещения.",
     "petsPolicy": "По предварително запитване.",
-    "minStayNights": "3 нощувки."
+    "minStayNights": "3 нощувки.",
+    "stayDiscountTitle": "Отстъпка при по-дълъг престой",
+    "stayDiscountPolicy": "Резервирайте 7 нощувки и получете 8-мата безплатно."
   },
   "months": {
     "may": {
@@ -168,7 +170,7 @@
     "leaveReview": "Оставете вашия отзив"
   },
   "gallery": {
-    "gallery":"Галерия",
+    "gallery": "Галерия",
     "outside": "Навън",
     "bathroom": "Баня",
     "bedroom1": "Спалня 1",

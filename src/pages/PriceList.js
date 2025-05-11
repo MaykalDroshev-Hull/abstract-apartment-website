@@ -143,6 +143,7 @@ const PriceList = () => {
                         <li><strong>{t('pricelist.smoking')}:</strong> {t('pricelist.smokingPolicy')}</li>
                         <li><strong>{t('pricelist.pets')}:</strong> {t('pricelist.petsPolicy')}</li>
                         <li><strong>{t('pricelist.minStay')}:</strong> {t('pricelist.minStayNights')}</li>
+                        <li><strong>{t('pricelist.stayDiscountTitle')}:</strong> {t('pricelist.stayDiscountPolicy')}</li>
                     </ul>
                 </div>
             </div>

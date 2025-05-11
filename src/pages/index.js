@@ -62,7 +62,7 @@ const Home = () => {
   ))}
 </p>
 
-    <img src="/Images/index/Why-us-1.png" alt="Quality Service" className={styles.whyChooseImage} />
+    <img src="/Images/Gallery/ApartmentFromOutside.jpg" alt="Quality Service" className={styles.whyChooseImage} />
   </div>
 </div>
     </>

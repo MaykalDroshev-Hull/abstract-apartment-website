@@ -70,7 +70,9 @@
     "checkOutTime": "By 11:00 AM.",
     "smokingPolicy": "Not allowed in any rooms.",
     "petsPolicy": "Allowed upon request.",
-    "minStayNights": "3 nights."
+    "minStayNights": "3 nights.",
+    "stayDiscountTitle": "Long Stay Discount",
+    "stayDiscountPolicy": "Book 7 nights and get the 8th night free."
   },
   "months": {
     "may": {
