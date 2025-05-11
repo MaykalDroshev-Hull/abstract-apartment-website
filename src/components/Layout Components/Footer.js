@@ -20,8 +20,8 @@ const Footer = () => {
         <div className={styles.infoSection}>
           <div className={styles.contactItem}>
             <FaMapMarkerAlt className={styles.infoicon} />
-            <a href="https://maps.app.goo.gl/Mazqq96okcJZLMNS9" target="_blank" rel="noopener noreferrer">
-              <span>Greece, Kavala, Paralia Ofryniou</span>
+            <a href="https://maps.app.goo.gl/XTAUqdxUTcj2obDu5" target="_blank" rel="noopener noreferrer">
+              <span>Martini 7, Ofriniou 640 08, Greece</span>
             </a>
           </div>
         </div>
