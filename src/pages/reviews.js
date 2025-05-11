@@ -46,7 +46,7 @@ const Reviews = () => {
     <p className={styles.moreReviewsText}>{t("reviews.moreText")}</p>
 
     <a
-      href="https://search.google.com/local/reviews?placeid=ChIJF91uqn7dq0ARxnEmywQWheI"
+      href="https://search.google.com/local/reviews?placeid=ChIJmagARgAlqRQR7AK38FlCyTE"
       target="_blank"
       rel="noopener noreferrer"
     >
@@ -61,7 +61,7 @@ const Reviews = () => {
     </a>
 
     <a
-      href="https://search.google.com/local/writereview?placeid=ChIJF91uqn7dq0ARxnEmywQWheI"
+      href="https://search.google.com/local/writereview?placeid=ChIJmagARgAlqRQR7AK38FlCyTE"
       target="_blank"
       rel="noopener noreferrer"
     >
