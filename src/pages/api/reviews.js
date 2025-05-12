@@ -2,7 +2,7 @@ export default async function handler(req, res) {
   const apiKey = process.env.GOOGLE_MAPS_API_KEY;
   const { locale = "bg" } = req.query; // fallback to 'bg' if not provided
 
-  const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJF91uqn7dq0ARxnEmywQWheI&key=${apiKey}&language=${locale}`;
+  const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=ChIJmagARgAlqRQR7AK38FlCyTE&key=${apiKey}&language=${locale}`;
 
   try {
     const response = await fetch(url);
