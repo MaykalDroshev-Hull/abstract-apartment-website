@@ -26,7 +26,7 @@ const Footer = () => {
               className={styles.mapButton}
             >
               <FaMapMarkerAlt className={styles.infoicon} />
-              &nbsp; Martini 7, Ofriniou 640 08, Greece
+              &nbsp; Martini 7, Paralia Ofriniou 640 08, Greece
             </a>
           </div>
         </div>

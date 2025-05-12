@@ -16,9 +16,7 @@ const initValues = {
   phoneNumber: '',
   checkInDate: '',
   checkOutDate: '',
-  typeOfDetail: '',
   additionalDetails: '',
-  desiredDate: '',
 }
 
 //An object containing the initial state for the form
@@ -51,16 +49,17 @@ const contact = () => {
         [target.name]: target.value,
       },
     }));
-  const setDatesManually = (checkIn, checkOut) => {
-    setFormState((prev) => ({
-      ...prev,
-      values: {
-        ...prev.values,
-        checkInDate: checkIn || prev.values.checkInDate,
-        checkOutDate: checkOut || prev.values.checkOutDate,
-      },
-    }));
-  };
+  const setDatesManually = (e) => {
+  const { name, value } = e.target;
+
+  setFormState((prev) => ({
+    ...prev,
+    values: {
+      ...prev.values,
+      [name === "checkinDate" ? "checkInDate" : "checkOutDate"]: value,
+    },
+  }));
+};
 
   //Function to submit the data to be handles by the API
   const onSubmit = async () => {
