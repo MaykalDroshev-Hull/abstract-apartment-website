@@ -38,12 +38,12 @@ const Footer = () => {
             <FaInstagram />
           </Link>
           {/* Phone Link */}
-          <Link href='tel:+359889301414'>
+          <Link href='tel:+359886790681'>
             <FaPhone />
           </Link>
 
           {/* Email Link */}
-          <Link href='abstract_apartment@abv.bg'>
+          <Link href='mailto:abstract.apartments@gmail.com'>
             <FaEnvelope />
           </Link>
         </div>

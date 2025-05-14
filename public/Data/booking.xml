@@ -1,46 +1,6 @@
 <?xml version="1.0"?>
 <bookings>
   <booking>
-    <date>2025-05-04</date>
-    <isBooked>false</isBooked>
-  </booking>
-  <booking>
-    <date>2025-05-05</date>
-    <isBooked>false</isBooked>
-  </booking>
-  <booking>
-    <date>2025-05-06</date>
-    <isBooked>false</isBooked>
-  </booking>
-  <booking>
-    <date>2025-05-07</date>
-    <isBooked>false</isBooked>
-  </booking>
-  <booking>
-    <date>2025-05-08</date>
-    <isBooked>true</isBooked>
-  </booking>
-  <booking>
-    <date>2025-05-09</date>
-    <isBooked>false</isBooked>
-  </booking>
-  <booking>
-    <date>2025-05-10</date>
-    <isBooked>false</isBooked>
-  </booking>
-  <booking>
-    <date>2025-05-11</date>
-    <isBooked>false</isBooked>
-  </booking>
-  <booking>
-    <date>2025-05-12</date>
-    <isBooked>false</isBooked>
-  </booking>
-  <booking>
-    <date>2025-05-13</date>
-    <isBooked>true</isBooked>
-  </booking>
-  <booking>
     <date>2025-05-14</date>
     <isBooked>false</isBooked>
   </booking>
@@ -142,31 +102,31 @@
   </booking>
   <booking>
     <date>2025-06-08</date>
-    <isBooked>true</isBooked>
+    <isBooked>false</isBooked>
   </booking>
   <booking>
     <date>2025-06-09</date>
-    <isBooked>true</isBooked>
+    <isBooked>false</isBooked>
   </booking>
   <booking>
     <date>2025-06-10</date>
-    <isBooked>true</isBooked>
+    <isBooked>false</isBooked>
   </booking>
   <booking>
     <date>2025-06-11</date>
-    <isBooked>true</isBooked>
+    <isBooked>false</isBooked>
   </booking>
   <booking>
     <date>2025-06-12</date>
-    <isBooked>true</isBooked>
+    <isBooked>false</isBooked>
   </booking>
   <booking>
     <date>2025-06-13</date>
-    <isBooked>true</isBooked>
+    <isBooked>false</isBooked>
   </booking>
   <booking>
     <date>2025-06-14</date>
-    <isBooked>true</isBooked>
+    <isBooked>false</isBooked>
   </booking>
   <booking>
     <date>2025-06-15</date>
@@ -370,6 +330,46 @@
   </booking>
   <booking>
     <date>2025-08-04</date>
+    <isBooked>false</isBooked>
+  </booking>
+  <booking>
+    <date>2025-08-05</date>
+    <isBooked>false</isBooked>
+  </booking>
+  <booking>
+    <date>2025-08-06</date>
+    <isBooked>false</isBooked>
+  </booking>
+  <booking>
+    <date>2025-08-07</date>
+    <isBooked>false</isBooked>
+  </booking>
+  <booking>
+    <date>2025-08-08</date>
+    <isBooked>false</isBooked>
+  </booking>
+  <booking>
+    <date>2025-08-09</date>
+    <isBooked>false</isBooked>
+  </booking>
+  <booking>
+    <date>2025-08-10</date>
+    <isBooked>false</isBooked>
+  </booking>
+  <booking>
+    <date>2025-08-11</date>
+    <isBooked>false</isBooked>
+  </booking>
+  <booking>
+    <date>2025-08-12</date>
+    <isBooked>false</isBooked>
+  </booking>
+  <booking>
+    <date>2025-08-13</date>
+    <isBooked>false</isBooked>
+  </booking>
+  <booking>
+    <date>2025-08-14</date>
     <isBooked>false</isBooked>
   </booking>
 </bookings>

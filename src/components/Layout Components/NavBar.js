@@ -50,13 +50,13 @@ const NavBar = () => {
 
         {/* Desktop Menu */}
         <div className={styles.desktopMenu}>
-        <Link href="/" locale={i18n.language}>{t('nav.home')}</Link>
-<Link href="/about" locale={i18n.language}>{t('nav.details')}</Link>
-<Link href="/services" locale={i18n.language}>{t('nav.gallery')}</Link>
-<Link href="/AvailableDates" locale={i18n.language}>{t('nav.dates')}</Link>
-<Link href="/PriceList" locale={i18n.language}>{t('nav.pricelist')}</Link>
-<Link href="/contact" locale={i18n.language}>{t('nav.contact')}</Link>
-<Link href="/reviews" locale={i18n.language}>{t('nav.reviews')}</Link>
+          <Link href="/" locale={i18n.language}>{t('nav.home')}</Link>
+          <Link href="/about" locale={i18n.language}>{t('nav.details')}</Link>
+          <Link href="/services" locale={i18n.language}>{t('nav.gallery')}</Link>
+          <Link href="/AvailableDates" locale={i18n.language}>{t('nav.dates')}</Link>
+          <Link href="/PriceList" locale={i18n.language}>{t('nav.pricelist')}</Link>
+          <Link href="/contact" locale={i18n.language}>{t('nav.contact')}</Link>
+          <Link href="/reviews" locale={i18n.language}>{t('nav.reviews')}</Link>
 
           <button
             onClick={() =>
@@ -66,7 +66,7 @@ const NavBar = () => {
             }
             className={styles.langButton}
           >
-            {locale === 'en' ? 'BG' : 'EN'}
+            {locale === 'en' ? '🇧🇬 BG' : '🇬🇧 EN'}
           </button>
 
         </div>
@@ -102,14 +102,14 @@ const NavBar = () => {
               {t('nav.reviews')}
             </Link>
             <button
-              onClick={() =>
+              onClick={() => {
                 router.push(router.pathname, router.asPath, {
                   locale: locale === 'en' ? 'bg' : 'en',
-                })
-              }
-              className={styles.langButton}
+                });
+                toggleMenu();
+              }}              className={styles.langButton}
             >
-              {locale === 'en' ? 'BG' : 'EN'}
+              {locale === 'en' ? '🇧🇬 BG' : '🇬🇧 EN'}
             </button>
 
             {/* <button onClick={toggleLanguage} className={styles.langButton}>
