@@ -23,7 +23,8 @@
     "pricelist": "Price List",
     "contact": "Contact",
     "reviews": "Reviews",
-    "creator": "Design by Maykal Droshev"
+    "creator": "Design by Maykal Droshev",
+    "АМА": "(ΑΜΑ) 00003339938"
   },
   "booking": {
     "checkin": "Check-in",
@@ -72,7 +73,9 @@
     "petsPolicy": "Allowed upon request.",
     "minStayNights": "3 nights.",
     "stayDiscountTitle": "Long Stay Discount",
-    "stayDiscountPolicy": "Book 7 nights and get the 8th night free."
+    "stayDiscountPolicy": "Book 7 nights and get the 8th night free.",
+    "depositTitle": "Deposit",
+    "depositPolicy": "30% of the reservation price."
   },
   "months": {
     "may": {

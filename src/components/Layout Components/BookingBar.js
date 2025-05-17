@@ -6,7 +6,6 @@ import { useRouter } from 'next/router';
 import { enUS, bg } from 'date-fns/locale';
 
 
-
 const BookingBar = ({ prefillCheckin }) => {
   const guestRef = useRef(null);
   const [checkIn, setCheckIn] = useState(null);
@@ -71,7 +70,25 @@ const BookingBar = ({ prefillCheckin }) => {
     }
     return false;
   };
+  const router = useRouter();
 
+  const handleBookClick = () => {
+    const locale = router.locale || 'en';
+
+    const checkInStr = checkIn ? format(checkIn, 'yyyy-MM-dd') : '';
+    const checkOutStr = checkOut ? format(checkOut, 'yyyy-MM-dd') : '';
+
+    const guestDetails = `${guests.adults} ${t('booking.adults')}, ${guests.children} ${t('booking.children')}, ${guests.infants} ${t('booking.infants')}`;
+
+    router.push({
+      pathname: '/contact',
+      query: {
+        checkIn: checkInStr,
+        checkOut: checkOutStr,
+        guests: guestDetails,
+      },
+    });
+  };
   return (
     <div className={styles.bookingBarWrapper}>
       <div className={styles.bookingRow}>
@@ -104,7 +121,7 @@ const BookingBar = ({ prefillCheckin }) => {
           <label>{t('booking.guests')}</label>
           <div>{guests.adults} {t('booking.adults')}, {guests.children} {t('booking.children')}</div>
         </div>
-        <button className={styles.bookButton}>{t('booking.book')}</button>
+        <button className={styles.bookButton} onClick={handleBookClick}>{t('booking.book')}</button>
       </div>
 
       {showCalendar && (

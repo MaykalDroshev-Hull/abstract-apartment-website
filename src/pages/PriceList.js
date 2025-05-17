@@ -24,7 +24,7 @@ const PriceList = () => {
     const months = [
         {
             name: t('months.may.name'),
-            price: 120,
+            price: 110,
             reasons: [
                 t('months.may.reasons.0'),
                 t('months.may.reasons.1'),
@@ -33,7 +33,7 @@ const PriceList = () => {
         },
         {
             name: t('months.june.name'),
-            price: 140,
+            price: 130,
             reasons: [
                 t('months.june.reasons.0'),
                 t('months.june.reasons.1'),
@@ -42,7 +42,7 @@ const PriceList = () => {
         },
         {
             name: t('months.july.name'),
-            price: 170,
+            price: 160,
             reasons: [
                 t('months.july.reasons.0'),
                 t('months.july.reasons.1'),
@@ -51,7 +51,7 @@ const PriceList = () => {
         },
         {
             name: t('months.august.name'),
-            price: 170,
+            price: 160,
             reasons: [
                 t('months.august.reasons.0'),
                 t('months.august.reasons.1'),
@@ -60,7 +60,7 @@ const PriceList = () => {
         },
         {
             name: t('months.september.name'),
-            price: 140,
+            price: 130,
             reasons: [
                 t('months.september.reasons.0'),
                 t('months.september.reasons.1'),
@@ -69,7 +69,7 @@ const PriceList = () => {
         },
         {
             name: t('months.october.name'),
-            price: 110,
+            price: 100,
             reasons: [
                 t('months.october.reasons.0'),
                 t('months.october.reasons.1'),
@@ -144,6 +144,7 @@ const PriceList = () => {
                         <li><strong>{t('pricelist.pets')}:</strong> {t('pricelist.petsPolicy')}</li>
                         <li><strong>{t('pricelist.minStay')}:</strong> {t('pricelist.minStayNights')}</li>
                         <li><strong>{t('pricelist.stayDiscountTitle')}:</strong> {t('pricelist.stayDiscountPolicy')}</li>
+                        <li><strong>{t('pricelist.depositTitle')}:</strong> {t('pricelist.depositPolicy')}</li>
                     </ul>
                 </div>
             </div>

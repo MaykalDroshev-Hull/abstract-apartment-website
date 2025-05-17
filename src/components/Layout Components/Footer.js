@@ -56,6 +56,7 @@ const Footer = () => {
           <Link href="/contact" locale={i18n.language}>{t('nav.contact')}</Link>
           <Link href="/reviews" locale={i18n.language}>{t('nav.reviews')}</Link>
         </div>
+        <p className={styles.p} >{t('nav.АМА')}</p>
         <p className={styles.p} >{t('nav.creator')}</p>
       </div>
     </>

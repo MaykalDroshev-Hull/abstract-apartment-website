@@ -7,6 +7,8 @@ import styles from '../styles/Page Styles/Contact.module.css'
 import { set } from "react-hook-form"
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 //An object containing initial values for the form fields
 const initValues = {
@@ -50,16 +52,16 @@ const contact = () => {
       },
     }));
   const setDatesManually = (e) => {
-  const { name, value } = e.target;
+    const { name, value } = e.target;
 
-  setFormState((prev) => ({
-    ...prev,
-    values: {
-      ...prev.values,
-      [name === "checkinDate" ? "checkInDate" : "checkOutDate"]: value,
-    },
-  }));
-};
+    setFormState((prev) => ({
+      ...prev,
+      values: {
+        ...prev.values,
+        [name === "checkinDate" ? "checkInDate" : "checkOutDate"]: value,
+      },
+    }));
+  };
 
   //Function to submit the data to be handles by the API
   const onSubmit = async () => {
@@ -78,7 +80,7 @@ const contact = () => {
       setFormState(initState)
       //Toast message that message was sent succesfully
       toast({
-        title: "Заявката е успешна!",
+        title: "Заявката е успешна!/ Successful Request",
         status: 'success',
         duration: 2000,
         position: 'top'
@@ -93,6 +95,24 @@ const contact = () => {
     }
   }
   const { t } = useTranslation('common');
+
+  const router = useRouter();
+  const { checkIn, checkOut, guests: guestsFromQuery } = router.query;
+
+  useEffect(() => {
+    if (checkIn || checkOut || guestsFromQuery) {
+      setFormState((prev) => ({
+        ...prev,
+        values: {
+          ...prev.values,
+          checkInDate: checkIn || '',
+          checkOutDate: checkOut || '',
+          additionalDetails: guestsFromQuery || '',
+        },
+      }));
+    }
+  }, [checkIn, checkOut, guestsFromQuery]);
+
 
   return (
     <>
