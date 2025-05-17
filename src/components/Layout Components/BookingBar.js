@@ -154,7 +154,7 @@ const BookingBar = ({ prefillCheckin }) => {
       {showGuestOptions && (
         <div className={styles.guestOptions} ref={guestRef}>
           <div className={styles.guestRow}>
-            <label>{t('booking.children')}</label>
+            <label>{t('booking.adults')}</label>
             <div className={styles.stepper}>
               <button
                 onClick={() =>

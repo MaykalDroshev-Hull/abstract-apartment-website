@@ -28,8 +28,7 @@ const AvailableDates = () => {
     const { t } = useTranslation('common');
     const { i18n } = useTranslation();
     const selectedMonth = router.query.month;
-    
-    // Load booking data from the XML file
+
     useEffect(() => {
         const loadDates = async () => {
             try {
@@ -51,13 +50,23 @@ const AvailableDates = () => {
         };
 
         loadDates();
+
+        // Navigate to the month specified in query (e.g., ?month=June)
         if (selectedMonth) {
-            // Scroll to or highlight the selected month
-            const element = document.getElementById(selectedMonth);
-            if (element) {
-              element.scrollIntoView({ behavior: 'smooth' });
+            const locale = i18n.language === "bg" ? bg : enUS;
+            const monthNames = Array.from({ length: 12 }, (_, i) =>
+                format(new Date(2025, i, 1), "LLLL", { locale })
+            );
+
+            const monthIndex = monthNames.findIndex(
+                name => name.toLowerCase() === selectedMonth.toLowerCase()
+            );
+
+            if (monthIndex >= 0) {
+                const newMonth = new Date(new Date().getFullYear(), monthIndex, 1);
+                setCurrentMonth(newMonth);
             }
-          }
+        }
     }, [selectedMonth]);
 
     const days = generateDays(currentMonth);
@@ -95,8 +104,11 @@ const AvailableDates = () => {
                     <button className={styles.calendarButton} onClick={handleNextMonth}>&gt;</button>
                 </div>
                 {days.map((monthDays, monthIndex) => (
-                    <div key={monthIndex} className={styles.monthContainer}>
-
+                    <div
+                        key={monthIndex}
+                        id={format(monthDays[0], "LLLL", { locale: i18n.language === "bg" ? bg : enUS })}
+                        className={styles.monthContainer}
+                    >
                         {/* Weekday Headers */}
                         <div className={styles.weekdays}>
                             {t("available.weekdays", { returnObjects: true }).map((day, i) => (
