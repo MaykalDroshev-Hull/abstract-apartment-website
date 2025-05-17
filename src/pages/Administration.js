@@ -28,7 +28,7 @@ const Administration = () => {
     }
     setDates(generatedDates);
   }, []);
-  
+
   useEffect(() => {
     const fetchBookedDates = async () => {
       try {
@@ -41,10 +41,10 @@ const Administration = () => {
         console.error('Failed to load bookings:', err);
       }
     };
-  
+
     fetchBookedDates();
   }, []);
-  
+
   const toggleBooked = (date) => {
     setBookedDates((prev) => ({
       ...prev,
@@ -70,7 +70,8 @@ const Administration = () => {
     if (result.success) {
       alert('Booking data saved!');
     } else {
-      alert('Failed to save booking data.');
+      const message = result.message || 'Failed to save booking data.';
+      alert(`Error: ${message}`);
     }
   };
 
@@ -124,7 +125,7 @@ const Administration = () => {
 
   return (
     <div className={styles.calendarContainer}>
-      <h1>Booking Administration</h1>
+<h1 className={styles.heading}>Настройка на дати</h1>
 
       {Object.entries(calendarData).map(([month, days]) => (
         <div key={month} className={styles.monthSection}>
@@ -154,7 +155,9 @@ const Administration = () => {
         </div>
       ))}
 
-      <button className={styles.saveButton} onClick={handleSave}>Save</button>
+<div className={styles.buttonContainer}>
+  <button className={styles.saveButton} onClick={handleSave}>Save</button>
+</div>
     </div>
   );
 };
