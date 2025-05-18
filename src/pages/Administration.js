@@ -26,7 +26,7 @@ const Administration = () => {
     endDate.setMonth(endDate.getMonth() + 5);
 
     for (let d = new Date(today); d <= endDate; d.setDate(d.getDate() + 1)) {
-      const dateStr = d.toISOString().split('T')[0];
+      const dateStr = format(new Date(d), 'yyyy-MM-dd');
       generatedDates.push(dateStr);
     }
     setDates(generatedDates);
@@ -144,7 +144,7 @@ const Administration = () => {
               <div key={d} className={styles.dayHeader}>{d}</div>
             ))}
             {days.map((day) => {
-              const dayStr = day.toISOString().split('T')[0];
+              const dayStr = format(day, 'yyyy-MM-dd'); // ✅ Use format instead of toISOString
               const isPast = isBefore(day, new Date());
               return (
                 <div key={dayStr} className={styles.dayCell}>
