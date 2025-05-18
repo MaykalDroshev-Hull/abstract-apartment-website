@@ -86,7 +86,7 @@
   </booking>
   <booking>
     <date>2025-06-07</date>
-    <isBooked>false</isBooked>
+    <isBooked>true</isBooked>
   </booking>
   <booking>
     <date>2025-06-08</date>
