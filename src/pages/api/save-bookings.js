@@ -1,32 +1,35 @@
-import fs from 'fs';
-import path from 'path';
-import { create } from 'xmlbuilder2';
+import { createClient } from '@supabase/supabase-js';
 
-export default function handler(req, res) {
-  if (req.method === 'POST') {
-    const { bookings } = req.body;
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
-    const xmlObj = {
-      bookings: {
-        booking: bookings.map((b) => ({
-          date: b.date,
-          isBooked: b.isBooked.toString(),
-        })),
-      },
-    };
-
-    const xml = create(xmlObj).end({ prettyPrint: true });
-
-    const filePath = path.join(process.cwd(), 'public', 'data', 'booking.xml');
-
-    fs.writeFile(filePath, xml, (err) => {
-      if (err) {
-        console.error('Error writing XML:', err);
-        return res.status(500).json({ success: false });
-      }
-      return res.status(200).json({ success: true });
-    });
-  } else {
-    res.status(405).end();
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ success: false, message: 'Method not allowed' });
   }
+
+  const { bookings } = req.body;
+
+  if (!Array.isArray(bookings)) {
+    return res.status(400).json({ success: false, message: 'Invalid format' });
+  }
+
+  // Upsert each booking individually
+  const upserts = bookings.map(({ date, isBooked }) => ({
+    Date: date,
+    IsBooked: isBooked,
+  }));
+
+  const { error } = await supabase
+    .from('Booking')
+    .upsert(upserts, { onConflict: 'Date' });
+
+  if (error) {
+    console.error('Supabase save error:', error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+
+  res.status(200).json({ success: true });
 }

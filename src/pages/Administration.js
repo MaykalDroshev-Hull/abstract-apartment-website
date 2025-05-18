@@ -8,6 +8,9 @@ import {
   startOfWeek,
   isBefore,
 } from 'date-fns';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+
 
 const Administration = () => {
   const [dates, setDates] = useState([]);
@@ -20,7 +23,7 @@ const Administration = () => {
     const today = new Date();
     const generatedDates = [];
     const endDate = new Date(today);
-    endDate.setMonth(endDate.getMonth() + 3);
+    endDate.setMonth(endDate.getMonth() + 5);
 
     for (let d = new Date(today); d <= endDate; d.setDate(d.getDate() + 1)) {
       const dateStr = d.toISOString().split('T')[0];
@@ -53,6 +56,7 @@ const Administration = () => {
   };
 
   const handleSave = async () => {
+  try {
     const bookingsToSave = dates.map((date) => ({
       date,
       isBooked: bookedDates[date] || false,
@@ -67,13 +71,18 @@ const Administration = () => {
     });
 
     const result = await response.json();
+
     if (result.success) {
-      alert('Booking data saved!');
+      alert('Запазено!');
     } else {
-      const message = result.message || 'Failed to save booking data.';
-      alert(`Error: ${message}`);
+      const message = result.error || 'Failed to save booking data.';
+      alert(`Грешка: ${message}`);
     }
-  };
+  } catch (err) {
+    alert(`Network error: ${err.message}`);
+  }
+};
+
 
   const getCalendarData = () => {
     const calendarMap = {};
@@ -105,16 +114,16 @@ const Administration = () => {
   if (!isAuthenticated) {
     return (
       <div className={styles.loginContainer}>
-        <h1>Admin Login</h1>
+        <h1>Вход за Настройване</h1>
         <input
           type="text"
-          placeholder="Username"
+          placeholder="Потребителско Име"
           value={usernameInput}
           onChange={(e) => setUsernameInput(e.target.value)}
         />
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Парола"
           value={passwordInput}
           onChange={(e) => setPasswordInput(e.target.value)}
         />
@@ -156,10 +165,17 @@ const Administration = () => {
       ))}
 
 <div className={styles.buttonContainer}>
-  <button className={styles.saveButton} onClick={handleSave}>Save</button>
+  <button className={styles.saveButton} onClick={handleSave}>Запази</button>
 </div>
     </div>
   );
 };
 
 export default Administration;
+export async function getStaticProps({ locale }) {
+    return {
+        props: {
+            ...(await serverSideTranslations(locale, ['common'])),
+        },
+    };
+}

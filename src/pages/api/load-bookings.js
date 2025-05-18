@@ -1,30 +1,28 @@
-import fs from 'fs';
-import path from 'path';
-import { XMLParser } from 'fast-xml-parser';
+import { createClient } from '@supabase/supabase-js';
 
-export default function handler(req, res) {
-  const filePath = path.join(process.cwd(), 'public', 'data', 'booking.xml');
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
-  try {
-    const xml = fs.readFileSync(filePath, 'utf8');
-    const parser = new XMLParser();
-    const parsed = parser.parse(xml);
-
-    const bookings = parsed.bookings?.booking || [];
-
-    // Normalize to array if only one booking
-    const normalized = Array.isArray(bookings) ? bookings : [bookings];
-
-    const bookedMap = {};
-    normalized.forEach((entry) => {
-      if (entry.isBooked === 'true' || entry.isBooked === true) {
-        bookedMap[entry.date] = true;
-      }
-    });
-
-    res.status(200).json({ success: true, bookedDates: bookedMap });
-  } catch (err) {
-    console.error('Failed to read booking.xml:', err);
-    res.status(500).json({ success: false });
+export default async function handler(req, res) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ success: false, message: 'Method not allowed' });
   }
+
+  const { data, error } = await supabase
+    .from('Booking')
+    .select('Date, IsBooked');
+
+  if (error) {
+    console.error('Supabase load error:', error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+
+  const bookedDates = {};
+  data.forEach(({ Date, IsBooked }) => {
+    if (IsBooked) bookedDates[Date] = true;
+  });
+
+  res.status(200).json({ success: true, bookedDates });
 }
