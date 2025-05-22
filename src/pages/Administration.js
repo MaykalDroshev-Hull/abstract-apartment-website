@@ -1,106 +1,148 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styles from '../styles/Page Styles/Administration.module.css';
-import {
-  format,
-  startOfMonth,
-  endOfMonth,
-  eachDayOfInterval,
-  startOfWeek,
-  isBefore,
-} from 'date-fns';
+import { format, parseISO } from 'date-fns';
+import { isAfter, isBefore, isEqual } from 'date-fns';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-
+const fetchBookings = async () => {
+  const res = await fetch('/api/get-bookings');
+  const data = await res.json();
+  return data.bookings || [];
+};
 
 const Administration = () => {
+  const [bookings, setBookings] = useState([]);
+  const [formData, setFormData] = useState({
+    CheckInDT: '',
+    CheckOutDT: '',
+    FirstName: '',
+    LastName: '',
+    Telephone: '',
+  });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editBookingID, setEditBookingID] = useState(null);
   const [dates, setDates] = useState([]);
   const [bookedDates, setBookedDates] = useState({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [usernameInput, setUsernameInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
-
   useEffect(() => {
-    const today = new Date();
-    const generatedDates = [];
-    const endDate = new Date(today);
-    endDate.setMonth(endDate.getMonth() + 5);
-
-    for (let d = new Date(today); d <= endDate; d.setDate(d.getDate() + 1)) {
-      const dateStr = format(new Date(d), 'yyyy-MM-dd');
-      generatedDates.push(dateStr);
-    }
-    setDates(generatedDates);
+    loadBookings();
   }, []);
 
-  useEffect(() => {
-    const fetchBookedDates = async () => {
-      try {
-        const res = await fetch('/api/load-bookings');
-        const data = await res.json();
-        if (data.success) {
-          setBookedDates(data.bookedDates);
+  const loadBookings = async () => {
+    const data = await fetchBookings();
+    setBookings(data);
+  };
+
+  const getOverlappingBookingIDs = () => {
+    const overlappingIDs = new Set();
+    for (let i = 0; i < bookings.length; i++) {
+      for (let j = i + 1; j < bookings.length; j++) {
+        const a = bookings[i];
+        const b = bookings[j];
+
+        const aStart = parseISO(a.CheckInDT);
+        const aEnd = parseISO(a.CheckOutDT);
+        const bStart = parseISO(b.CheckInDT);
+        const bEnd = parseISO(b.CheckOutDT);
+
+        const overlaps =
+          aStart < bEnd && aEnd > bStart; // excludes edge-case same-day turnover
+
+        if (overlaps) {
+          overlappingIDs.add(a.BookingID);
+          overlappingIDs.add(b.BookingID);
         }
-      } catch (err) {
-        console.error('Failed to load bookings:', err);
       }
-    };
-
-    fetchBookedDates();
-  }, []);
-
-  const toggleBooked = (date) => {
-    setBookedDates((prev) => ({
-      ...prev,
-      [date]: !prev[date],
-    }));
-  };
-
-  const handleSave = async () => {
-  try {
-    const bookingsToSave = dates.map((date) => ({
-      date,
-      isBooked: bookedDates[date] || false,
-    }));
-
-    const response = await fetch('/api/save-bookings', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ bookings: bookingsToSave }),
-    });
-
-    const result = await response.json();
-
-    if (result.success) {
-      alert('Запазено!');
-    } else {
-      const message = result.error || 'Failed to save booking data.';
-      alert(`Грешка: ${message}`);
     }
-  } catch (err) {
-    alert(`Network error: ${err.message}`);
-  }
-};
-
-
-  const getCalendarData = () => {
-    const calendarMap = {};
-    dates.forEach((dateStr) => {
-      const date = new Date(dateStr);
-      const key = format(date, 'MMMM yyyy');
-      if (!calendarMap[key]) {
-        const monthStart = startOfWeek(startOfMonth(date), { weekStartsOn: 1 });
-        const monthEnd = endOfMonth(date);
-        const days = eachDayOfInterval({ start: monthStart, end: monthEnd });
-        calendarMap[key] = days;
-      }
-    });
-    return calendarMap;
+    return overlappingIDs;
   };
 
-  const calendarData = getCalendarData();
+  const overlappingIDs = getOverlappingBookingIDs();
+  const getCurrentBooking = () => {
+    const today = new Date();
+    return bookings.find(b => {
+      const checkIn = parseISO(b.CheckInDT);
+      const checkOut = parseISO(b.CheckOutDT);
+      return (
+        (isBefore(checkIn, today) || isEqual(checkIn, today)) &&
+        (isAfter(checkOut, today) || isEqual(checkOut, today))
+      );
+    });
+  };
 
+  const currentBooking = getCurrentBooking();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditBookingID(null);
+    setEditCustomerID(null);
+    setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '' });
+  };
+
+  const handleAdd = async () => {
+    // Add a new booking + customer
+    const res = await fetch('/api/add-booking', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+    if (res.ok) {
+      await loadBookings();
+      setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '' });
+    }
+  };
+  const [editCustomerID, setEditCustomerID] = useState(null);
+
+  const handleEdit = (booking) => {
+    setIsEditing(true);
+    setEditBookingID(booking.BookingID);
+    setEditCustomerID(booking.CustomerID);
+
+    setFormData({
+      CheckInDT: booking.CheckInDT
+        ? format(parseISO(booking.CheckInDT), 'yyyy-MM-dd')
+        : '',
+      CheckOutDT: booking.CheckOutDT
+        ? format(parseISO(booking.CheckOutDT), 'yyyy-MM-dd')
+        : '',
+      FirstName: booking.Customer?.FirstName || '',
+      LastName: booking.Customer?.LastName || '',
+      Telephone: booking.Customer?.Telephone || '',
+    });
+  };
+
+  const handleSaveEdit = async () => {
+    const res = await fetch('/api/edit-booking', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        BookingID: editBookingID,
+        newCheckInDT: formData.CheckInDT,
+        newCheckOutDT: formData.CheckOutDT,
+      }),
+    });
+    if (res.ok) {
+      setIsEditing(false);
+      setEditBookingID(null);
+      setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '' });
+      await loadBookings();
+    }
+  };
+
+  const handleDelete = async (BookingID) => {
+    const res = await fetch('/api/delete-booking', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ BookingID }),
+    });
+    if (res.ok) await loadBookings();
+  };
   const handleLogin = () => {
     const envUsername = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
     const envPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
@@ -131,51 +173,126 @@ const Administration = () => {
       </div>
     );
   }
-
   return (
-    <div className={styles.calendarContainer}>
-<h1 className={styles.heading}>Настройка на дати</h1>
+    <div className={styles.adminPage}>
+      <h1 className={styles.heading}>Управление на резервации</h1>
+      {/* {currentBooking && (
+  <div className={styles.currentBookingBox}>
+    <h2>Текуща резервация</h2>
+    <p><strong>Име:</strong> {currentBooking.Customer?.FirstName}</p>
+    <p><strong>Фамилия:</strong> {currentBooking.Customer?.LastName}</p>
+    <p><strong>Телефон:</strong> {currentBooking.Customer?.Telephone}</p>
+    <p><strong>Настаняване:</strong> {format(parseISO(currentBooking.CheckInDT), 'yyyy-MM-dd')}</p>
+    <p><strong>Освобождаване:</strong> {format(parseISO(currentBooking.CheckOutDT), 'yyyy-MM-dd')}</p>
+  </div>
+)} */}
 
-      {Object.entries(calendarData).map(([month, days]) => (
-        <div key={month} className={styles.monthSection}>
-          <h2>{month}</h2>
-          <div className={styles.calendarGrid}>
-            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((d) => (
-              <div key={d} className={styles.dayHeader}>{d}</div>
+      <div className={styles.formSection}>
+        <h2>{isEditing ? 'Редактирай Резервация' : 'Добави Нова Резервация'}</h2>
+        <label>
+          Настаняване:
+          <input
+            type="date"
+            name="CheckInDT"
+            value={formData.CheckInDT}
+            onChange={handleChange}
+          />
+        </label>
+        <label>
+          Освобождаване:
+          <input
+            type="date"
+            name="CheckOutDT"
+            value={formData.CheckOutDT}
+            onChange={handleChange}
+          />
+        </label>
+        <label>
+          Име:
+          <input
+            type="text"
+            name="FirstName"
+            placeholder="Име"
+            value={formData.FirstName}
+            onChange={handleChange}
+            disabled={isEditing}
+          />
+        </label>
+        <label>
+          Фамилия:
+          <input
+            type="text"
+            name="LastName"
+            placeholder="Фамилия"
+            value={formData.LastName}
+            onChange={handleChange}
+            disabled={isEditing}
+          />
+        </label>
+        <label>
+          Телефон:
+          <input
+            type="text"
+            name="Telephone"
+            placeholder="Телефон"
+            value={formData.Telephone}
+            onChange={handleChange}
+            disabled={isEditing}
+          />
+        </label>
+        <button onClick={isEditing ? handleSaveEdit : handleAdd}>
+          {isEditing ? 'Запази' : 'Добави'}
+        </button>
+
+        {isEditing && (
+          <button onClick={handleCancelEdit} className={styles.cancelButton}>
+            Отказ
+          </button>
+        )}
+      </div>
+
+      <div className={styles.bookingsList}>
+        <h2>Бъдещи Резервации</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Име</th>
+              <th>Фамилия</th>
+              <th>Телефон</th>
+              <th>Настаняване</th>
+              <th>Освобождаване</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody>
+            {bookings.map((b) => (
+              <tr
+                key={b.BookingID}
+                className={overlappingIDs.has(b.BookingID) ? styles.overlappingRow : ''}
+              >
+                <td className={styles.overlappingRowData}>{b.Customer?.FirstName || ''}</td>
+                <td className={styles.overlappingRowData}>{b.Customer?.LastName || ''}</td>
+                <td className={styles.overlappingRowData}>{b.Customer?.Telephone || ''}</td>
+                <td className={styles.overlappingRowData}>{format(parseISO(b.CheckInDT), 'yyyy-MM-dd')}</td>
+                <td className={styles.overlappingRowData}>{format(parseISO(b.CheckOutDT), 'yyyy-MM-dd')}</td>
+                <td>
+                  <button onClick={() => handleEdit(b)}>Редактирай</button>
+                  <button onClick={() => handleDelete(b.BookingID)}>Изтрий</button>
+                </td>
+              </tr>
             ))}
-            {days.map((day) => {
-              const dayStr = format(day, 'yyyy-MM-dd'); // ✅ Use format instead of toISOString
-              const isPast = isBefore(day, new Date());
-              return (
-                <div key={dayStr} className={styles.dayCell}>
-                  <label className={styles.checkbox}>
-                    <input
-                      type="checkbox"
-                      checked={bookedDates[dayStr] || false}
-                      onChange={() => toggleBooked(dayStr)}
-                      disabled={isPast}
-                    />
-                    <span className={styles.dayLabel}>{day.getDate()}</span>
-                  </label>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      ))}
-
-<div className={styles.buttonContainer}>
-  <button className={styles.saveButton} onClick={handleSave}>Запази</button>
-</div>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
 
 export default Administration;
 export async function getStaticProps({ locale }) {
-    return {
-        props: {
-            ...(await serverSideTranslations(locale, ['common'])),
-        },
-    };
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
 }
