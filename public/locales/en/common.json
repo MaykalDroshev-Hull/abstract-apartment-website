@@ -173,7 +173,7 @@
     "leaveReview": "Leave your review"
   },
   "gallery": {
-    "gallery":"Gallery",
+    "gallery": "Gallery",
     "outside": "Outside",
     "bathroom": "Bathroom",
     "bedroom1": "Bedroom 1",
@@ -182,5 +182,30 @@
     "kitchen": "Kitchen",
     "terrace": "Terrace",
     "garage": "Garage & Info"
+  },
+  "bookingPage": {
+    "title": "Reservation",
+    "cancelNotice": "The payment was cancelled. You can try again later.",
+    "checkin": "Check-in",
+    "checkout": "Check-out",
+    "guests": "Guests",
+    "totalNights": "Total nights",
+    "freeNight": "~€{{price}}~ €0 (Free night)",
+    "nightPrice": "€{{price}}",
+    "longStayDiscount": "Discount for 8+ nights: -€{{discount}}",
+    "total": "Total",
+    "deposit": "Due now (30% deposit)",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "phone": "Phone",
+    "pay": "Pay",
+    "loading": "Loading..."
+  },
+  "successPage": {
+    "title": "Payment Successful!",
+    "thankYou": "Thank you for your reservation.\r\n We’ll get back to you as soon as possible!",
+    "processing": "We are processing your reservation...",
+    "errorTitle": "An error occurred",
+    "errorMessage": "Please contact us to confirm your reservation."
   }
 }

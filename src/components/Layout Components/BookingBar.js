@@ -1,9 +1,10 @@
 import styles from '../../styles/Component Styles/BookingBar.module.css';
-import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isAfter, isBefore } from 'date-fns';
+import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isAfter, isBefore, startOfDay } from 'date-fns';
 import React, { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { enUS, bg } from 'date-fns/locale';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 
 const BookingBar = ({ prefillCheckin }) => {
@@ -16,6 +17,18 @@ const BookingBar = ({ prefillCheckin }) => {
   const [guests, setGuests] = useState({ adults: 1, children: 0, infants: 0 });
   const { i18n } = useTranslation();
   const currentLocale = i18n.language === 'bg' ? bg : enUS;
+  const [calendarStartMonth, setCalendarStartMonth] = useState(new Date());
+  const [bookedDates, setBookedDates] = useState({});
+  const [currentMonth, setCurrentMonth] = useState(startOfMonth(new Date()));
+  const calendarRef = useRef(null);
+
+  const scrollToCalendar = () => {
+    if (window.innerWidth <= 600 && calendarRef.current) {
+      setTimeout(() => {
+        calendarRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100); // Allow UI to update first
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -34,6 +47,13 @@ const BookingBar = ({ prefillCheckin }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [showGuestOptions]);
+  useEffect(() => {
+    fetch('/api/load-bookings')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) setBookedDates(data.bookedDates);
+      });
+  }, []);
 
   useEffect(() => {
     if (prefillCheckin) {
@@ -52,9 +72,11 @@ const BookingBar = ({ prefillCheckin }) => {
     return eachDayOfInterval({ start, end });
   };
 
-  const monthsToShow = [new Date(), addMonths(new Date(), 1)];
+  const monthsToShow = [currentMonth, addMonths(currentMonth, 1)];
 
   const handleDayClick = (date) => {
+    if (isBooked(date)) return;
+
     if (!checkIn || (checkIn && checkOut)) {
       setCheckIn(date);
       setCheckOut(null);
@@ -63,6 +85,7 @@ const BookingBar = ({ prefillCheckin }) => {
       setShowCalendar(false);
     }
   };
+
 
   const isInRange = (date) => {
     if (checkIn && hoveredDate && !checkOut) {
@@ -81,7 +104,7 @@ const BookingBar = ({ prefillCheckin }) => {
     const guestDetails = `${guests.adults} ${t('booking.adults')}, ${guests.children} ${t('booking.children')}, ${guests.infants} ${t('booking.infants')}`;
 
     router.push({
-      pathname: '/contact',
+      pathname: '/payment',
       query: {
         checkIn: checkInStr,
         checkOut: checkOutStr,
@@ -89,25 +112,47 @@ const BookingBar = ({ prefillCheckin }) => {
       },
     });
   };
+
+  const isBooked = (date) => bookedDates[format(date, 'yyyy-MM-dd')];
+
   return (
     <div className={styles.bookingBarWrapper}>
       <div className={styles.bookingRow}>
-        <div className={styles.field} onClick={() => {
-          setShowCalendar(!showCalendar);
-          setShowGuestOptions(false); // 👈 close guests when opening calendar
-        }}>
+        <div className={styles.field}
+          onClick={() => {
+            const shouldOpen = !showCalendar;
+            setShowCalendar(shouldOpen);
+            setShowGuestOptions(false);
+
+            if (shouldOpen && window.innerWidth <= 600) {
+              // Only scroll if opening on mobile
+              setTimeout(() => {
+                calendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }, 100);
+            }
+          }}>
           <label>{t('booking.checkin')}</label>
           <div className={styles.dateValue}>
             {checkIn ? format(checkIn, 'dd MMM yyyy', { locale: currentLocale }) : t('booking.select')}
           </div>
 
         </div>
-        <div className={styles.field} onClick={() => {
-          if (checkIn) {
-            setShowCalendar(!showCalendar);
-            setShowGuestOptions(false); // 👈 same here
-          }
-        }}>
+        <div
+          className={styles.field}
+          onClick={() => {
+            if (checkIn) {
+              const shouldOpen = !showCalendar;
+              setShowCalendar(shouldOpen);
+              setShowGuestOptions(false);
+
+              if (shouldOpen && window.innerWidth <= 600) {
+                setTimeout(() => {
+                  calendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+              }
+            }
+          }}
+        >
           <label>{t('booking.checkout')}</label>
           <div className={styles.dateValue}>
             {checkOut ? format(checkOut, 'dd MMM yyyy', { locale: currentLocale }) : t('booking.select')}
@@ -125,31 +170,46 @@ const BookingBar = ({ prefillCheckin }) => {
       </div>
 
       {showCalendar && (
-        <div className={styles.calendarWrapper}>
-          {monthsToShow.map((month, idx) => (
-            <div className={styles.calendarMonth} key={idx}>
-              <div className={styles.monthHeader}>{format(month, 'MMMM yyyy', { locale: bg })}</div>
-              <div className={styles.dayGrid}>
-                {generateDays(month).map((day) => (
-                  <div
-                    key={day}
-                    className={`
-                      ${styles.dayCell}
-                      ${isSameDay(day, checkIn) ? styles.checkIn : ''}
-                      ${isSameDay(day, checkOut) ? styles.checkOut : ''}
-                      ${isInRange(day) ? styles.inRange : ''}
-                    `}
-                    onMouseEnter={() => setHoveredDate(day)}
-                    onClick={() => handleDayClick(day)}
-                  >
-                    {format(day, 'd')}
-                  </div>
-                ))}
+        <div className={styles.calendarWrapper} ref={calendarRef}>
+          <div className={styles.calendarNav}>
+            <button onClick={() => setCurrentMonth(addMonths(currentMonth, -1))}>
+              <ChevronLeft size={20} />
+            </button>
+
+            {monthsToShow.map((month, idx) => (
+              <div className={styles.calendarMonth} key={idx}>
+                <div className={styles.monthHeader}>{format(month, 'MMMM yyyy', { locale: currentLocale })}</div>
+                <div className={styles.dayGrid}>
+                  {generateDays(month).map((day) => {
+                    const disabled = isBefore(day, startOfDay(new Date())) || isBooked(day);
+                    return (
+                      <div
+                        key={day}
+                        className={`
+                  ${styles.dayCell}
+                  ${isSameDay(day, checkIn) ? styles.checkIn : ''}
+                  ${isSameDay(day, checkOut) ? styles.checkOut : ''}
+                  ${isInRange(day) ? styles.inRange : ''}
+                  ${disabled ? styles.disabled : ''}
+                `}
+                        onMouseEnter={() => !disabled && setHoveredDate(day)}
+                        onClick={() => handleDayClick(day)}
+                      >
+                        {format(day, 'd')}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+
+            <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}>
+              <ChevronRight size={20} />
+            </button>
+          </div>
         </div>
       )}
+
 
       {showGuestOptions && (
         <div className={styles.guestOptions} ref={guestRef}>
