@@ -8,7 +8,7 @@ export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).end("Method not allowed");
   }
-  const { amount, checkIn, checkOut, guests, firstName, lastName, telephone } = req.body;
+  const { amount, checkIn, checkOut, guests, firstName, lastName, telephone, fullPrice, paidPrice } = req.body;
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
           quantity: 1,
         },
       ],
-      success_url: `${req.headers.origin}/success?checkIn=${encodeURIComponent(checkIn)}&checkOut=${encodeURIComponent(checkOut)}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}&telephone=${encodeURIComponent(telephone)}`,
+      success_url: `${req.headers.origin}/success?checkIn=${encodeURIComponent(checkIn)}&checkOut=${encodeURIComponent(checkOut)}&firstName=${encodeURIComponent(firstName)}&lastName=${encodeURIComponent(lastName)}&telephone=${encodeURIComponent(telephone)}&fullPrice=${encodeURIComponent(fullPrice)}&paidPrice=${encodeURIComponent(paidPrice)}`,
       cancel_url: `${req.headers.origin}/payment?cancelled=true`,
       metadata: {
         checkIn,
@@ -36,6 +36,8 @@ export default async function handler(req, res) {
         firstName,
         lastName,
         telephone,
+        fullPrice,
+        paidPrice,
       },
 
     });

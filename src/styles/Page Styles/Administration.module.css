@@ -1,5 +1,5 @@
 .adminPage {
-  max-width: 1000px;
+  max-width: 1700px;
   margin: 0 auto;
   padding: 2rem;
   font-family: sans-serif;
@@ -164,6 +164,13 @@
   opacity: 0.85;
 }
 @media (max-width: 756px) {
+  .bookingsList td::before {
+  content: attr(data-label) ": ";
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #444;
+}
   .adminPage {
     padding: 1rem;
   }
@@ -277,4 +284,8 @@
 }
 .overlappingRow .overlappingRowData{
   background-color: #ff0000 !important;
+}
+
+html {
+  scroll-behavior: smooth;
 }

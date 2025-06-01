@@ -107,7 +107,9 @@ const Payment = () => {
         amount: Math.round(paymentDetails.deposit * 100),
         firstName,
         lastName,
-        telephone
+        telephone,
+        fullPrice: paymentDetails.total,
+        paidPrice: paymentDetails.deposit,
       }),
     });
 

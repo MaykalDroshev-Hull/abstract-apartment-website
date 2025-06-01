@@ -8,11 +8,11 @@ const supabase = createClient(
 export default async function handler(req, res) {
   if (req.method !== 'PUT') return res.status(405).end();
 
-  const { BookingID, newCheckInDT, newCheckOutDT } = req.body;
+  const { BookingID, newCheckInDT, newCheckOutDT, FullPrice, PaidPrice, Comments } = req.body;
 
   const { error } = await supabase
     .from('Booking')
-    .update({ CheckInDT: newCheckInDT, CheckOutDT: newCheckOutDT })
+    .update({ CheckInDT: newCheckInDT, CheckOutDT: newCheckOutDT, FullPrice, PaidPrice, Comments })
     .eq('BookingID', BookingID);
 
   if (error) return res.status(500).json({ error });

@@ -3,6 +3,8 @@ import styles from '../styles/Page Styles/Administration.module.css';
 import { format, parseISO } from 'date-fns';
 import { isAfter, isBefore, isEqual } from 'date-fns';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRef } from 'react';
+
 
 const fetchBookings = async () => {
   const res = await fetch('/api/get-bookings');
@@ -18,6 +20,9 @@ const Administration = () => {
     FirstName: '',
     LastName: '',
     Telephone: '',
+    FullPrice: '',
+    PaidPrice: '',
+    Comments: '',
   });
   const [isEditing, setIsEditing] = useState(false);
   const [editBookingID, setEditBookingID] = useState(null);
@@ -82,7 +87,7 @@ const Administration = () => {
     setIsEditing(false);
     setEditBookingID(null);
     setEditCustomerID(null);
-    setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '' });
+    setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '', FullPrice: '', PaidPrice: '', Comments: '' });
   };
 
   const handleAdd = async () => {
@@ -94,7 +99,7 @@ const Administration = () => {
     });
     if (res.ok) {
       await loadBookings();
-      setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '' });
+      setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '', FullPrice: '', PaidPrice: '', Comments: '' });
     }
   };
   const [editCustomerID, setEditCustomerID] = useState(null);
@@ -114,7 +119,15 @@ const Administration = () => {
       FirstName: booking.Customer?.FirstName || '',
       LastName: booking.Customer?.LastName || '',
       Telephone: booking.Customer?.Telephone || '',
+      FullPrice: booking.FullPrice || '',
+      PaidPrice: booking.PaidPrice || '',
+      Comments: booking.Comments || '',
     });
+
+    // Scroll to the form
+    if (formRef.current) {
+      formRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   const handleSaveEdit = async () => {
@@ -125,12 +138,15 @@ const Administration = () => {
         BookingID: editBookingID,
         newCheckInDT: formData.CheckInDT,
         newCheckOutDT: formData.CheckOutDT,
+        FullPrice: formData.FullPrice,
+        PaidPrice: formData.PaidPrice,
+        Comments: formData.Comments,
       }),
     });
     if (res.ok) {
       setIsEditing(false);
       setEditBookingID(null);
-      setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '' });
+      setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '', FullPrice: '', PaidPrice: '', Comments: '' });
       await loadBookings();
     }
   };
@@ -152,6 +168,7 @@ const Administration = () => {
       alert('Incorrect credentials');
     }
   };
+  const formRef = useRef(null);
 
   if (!isAuthenticated) {
     return (
@@ -173,6 +190,7 @@ const Administration = () => {
       </div>
     );
   }
+
   return (
     <div className={styles.adminPage}>
       <h1 className={styles.heading}>Управление на резервации</h1>
@@ -187,7 +205,7 @@ const Administration = () => {
   </div>
 )} */}
 
-      <div className={styles.formSection}>
+<div className={styles.formSection} ref={formRef}>
         <h2>{isEditing ? 'Редактирай Резервация' : 'Добави Нова Резервация'}</h2>
         <label>
           Настаняване:
@@ -240,6 +258,32 @@ const Administration = () => {
             disabled={isEditing}
           />
         </label>
+        <label>
+          Обща Сума (€):
+          <input
+            type="number"
+            name="FullPrice"
+            value={formData.FullPrice}
+            onChange={handleChange}
+          />
+        </label>
+        <label>
+          Платено (€):
+          <input
+            type="number"
+            name="PaidPrice"
+            value={formData.PaidPrice}
+            onChange={handleChange}
+          />
+        </label>
+        <label>
+          Коментари:
+          <input
+            name="Comments"
+            value={formData.Comments}
+            onChange={handleChange}
+          />
+        </label>
         <button onClick={isEditing ? handleSaveEdit : handleAdd}>
           {isEditing ? 'Запази' : 'Добави'}
         </button>
@@ -261,6 +305,9 @@ const Administration = () => {
               <th>Телефон</th>
               <th>Настаняване</th>
               <th>Освобождаване</th>
+              <th>Обща Сума</th>
+              <th>Платено</th>
+              <th>Коментари</th>
               <th>Действия</th>
             </tr>
           </thead>
@@ -270,18 +317,22 @@ const Administration = () => {
                 key={b.BookingID}
                 className={overlappingIDs.has(b.BookingID) ? styles.overlappingRow : ''}
               >
-                <td className={styles.overlappingRowData}>{b.Customer?.FirstName || ''}</td>
-                <td className={styles.overlappingRowData}>{b.Customer?.LastName || ''}</td>
-                <td className={styles.overlappingRowData}>{b.Customer?.Telephone || ''}</td>
-                <td className={styles.overlappingRowData}>{format(parseISO(b.CheckInDT), 'yyyy-MM-dd')}</td>
-                <td className={styles.overlappingRowData}>{format(parseISO(b.CheckOutDT), 'yyyy-MM-dd')}</td>
-                <td>
+                <td data-label="Име" className={styles.overlappingRowData}>{b.Customer?.FirstName || ''}</td>
+                <td data-label="Фамилия" className={styles.overlappingRowData}>{b.Customer?.LastName || ''}</td>
+                <td data-label="Телефон" className={styles.overlappingRowData}>{b.Customer?.Telephone || ''}</td>
+                <td data-label="Настаняване" className={styles.overlappingRowData}>{format(parseISO(b.CheckInDT), 'yyyy-MM-dd')}</td>
+                <td data-label="Освобождаване" className={styles.overlappingRowData}>{format(parseISO(b.CheckOutDT), 'yyyy-MM-dd')}</td>
+                <td data-label="Обща Сума" className={styles.overlappingRowData}>{b.FullPrice != null && b.FullPrice !== '' ? '€' + b.FullPrice : ''}</td>
+                <td data-label="Платено" className={styles.overlappingRowData}>{b.PaidPrice != null && b.PaidPrice !== '' ? '€' + b.PaidPrice : ''}</td>
+                <td data-label="Коментари" className={styles.overlappingRowData}>{b.Comments || ''}</td>
+                <td data-label="Действия">
                   <button onClick={() => handleEdit(b)}>Редактирай</button>
                   <button onClick={() => handleDelete(b.BookingID)}>Изтрий</button>
                 </td>
               </tr>
             ))}
           </tbody>
+
         </table>
       </div>
     </div>

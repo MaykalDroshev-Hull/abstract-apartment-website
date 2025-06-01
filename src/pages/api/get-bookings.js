@@ -17,7 +17,10 @@ export default async function handler(req, res) {
         FirstName,
         LastName,
         Telephone
-      )
+      ),
+      FullPrice,
+      PaidPrice,
+      Comments
     `)
     .gt('CheckOutDT', new Date().toISOString()).order('CheckInDT');
 

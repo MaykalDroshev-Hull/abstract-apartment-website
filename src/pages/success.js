@@ -3,11 +3,12 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import Meta from '@/components/Page Components/Meta'
+import { sendBookingNotification } from '@/pages/api/bookingNotification';
 
 const Success = () => {
   const router = useRouter();
   const { t } = useTranslation('common');
-  const { checkIn, checkOut, firstName, lastName, telephone } = router.query;
+  const { checkIn, checkOut, firstName, lastName, telephone, fullPrice, paidPrice } = router.query;
 
   const [status, setStatus] = useState('loading');
 
@@ -26,11 +27,22 @@ const Success = () => {
               FirstName: firstName,
               LastName: lastName,
               Telephone: telephone,
+              FullPrice: Number(fullPrice),
+              PaidPrice: Number(paidPrice),
             }),
           });
 
           if (!res.ok) throw new Error('Failed to save booking');
           setStatus('success');
+          await sendBookingNotification({
+            checkIn,
+            checkOut,
+            firstName,
+            lastName,
+            telephone,
+            fullPrice: Number(fullPrice),
+            paidPrice: Number(paidPrice),
+          });
         } catch (err) {
           console.error(err);
           setStatus('error');
@@ -54,7 +66,7 @@ const Success = () => {
     marginBottom: '1rem',
   };
   return (
-<>
+    <>
       <Meta title={t('metaTitle')} />
       <div style={containerStyle}>
         {status === 'success' ? (
