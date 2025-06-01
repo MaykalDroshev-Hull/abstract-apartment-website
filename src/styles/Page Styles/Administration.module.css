@@ -285,7 +285,3 @@
 .overlappingRow .overlappingRowData{
   background-color: #ff0000 !important;
 }
-
-html {
-  scroll-behavior: smooth;
-}
