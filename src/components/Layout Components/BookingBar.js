@@ -21,6 +21,8 @@ const BookingBar = ({ prefillCheckin }) => {
   const [bookedDates, setBookedDates] = useState({});
   const [currentMonth, setCurrentMonth] = useState(startOfMonth(new Date()));
   const calendarRef = useRef(null);
+  const [checkInError, setCheckInError] = useState(false);
+  const [checkOutError, setCheckOutError] = useState(false);
 
   const scrollToCalendar = () => {
     if (window.innerWidth <= 600 && calendarRef.current) {
@@ -95,70 +97,81 @@ const BookingBar = ({ prefillCheckin }) => {
   };
   const router = useRouter();
 
-  const handleBookClick = () => {
-    const locale = router.locale || 'en';
+const handleBookClick = () => {
+  const hasCheckIn = !!checkIn;
+  const hasCheckOut = !!checkOut;
 
-    const checkInStr = checkIn ? format(checkIn, 'yyyy-MM-dd') : '';
-    const checkOutStr = checkOut ? format(checkOut, 'yyyy-MM-dd') : '';
+  setCheckInError(!hasCheckIn);
+  setCheckOutError(!hasCheckOut);
 
-    const guestDetails = `${guests.adults} ${t('booking.adults')}, ${guests.children} ${t('booking.children')}, ${guests.infants} ${t('booking.infants')}`;
+  if (!hasCheckIn || !hasCheckOut) {
+    scrollToCalendar(); // Optional: scroll to calendar on error
+    return; // Stop navigation
+  }
 
-    router.push({
-      pathname: '/payment',
-      query: {
-        checkIn: checkInStr,
-        checkOut: checkOutStr,
-        guests: guestDetails,
-      },
-    });
-  };
+  const locale = router.locale || 'en';
+  const checkInStr = format(checkIn, 'yyyy-MM-dd');
+  const checkOutStr = format(checkOut, 'yyyy-MM-dd');
+  const guestDetails = `${guests.adults} ${t('booking.adults')}, ${guests.children} ${t('booking.children')}, ${guests.infants} ${t('booking.infants')}`;
+
+  router.push({
+    pathname: '/payment',
+    query: {
+      checkIn: checkInStr,
+      checkOut: checkOutStr,
+      guests: guestDetails,
+    },
+  });
+};
 
   const isBooked = (date) => bookedDates[format(date, 'yyyy-MM-dd')];
 
   return (
     <div className={styles.bookingBarWrapper}>
       <div className={styles.bookingRow}>
-        <div className={styles.field}
-          onClick={() => {
-            const shouldOpen = !showCalendar;
-            setShowCalendar(shouldOpen);
-            setShowGuestOptions(false);
-
-            if (shouldOpen && window.innerWidth <= 600) {
-              // Only scroll if opening on mobile
-              setTimeout(() => {
-                calendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }, 100);
-            }
-          }}>
-          <label>{t('booking.checkin')}</label>
-          <div className={styles.dateValue}>
-            {checkIn ? format(checkIn, 'dd MMM yyyy', { locale: currentLocale }) : t('booking.select')}
-          </div>
-
-        </div>
         <div
-          className={styles.field}
-          onClick={() => {
-            if (checkIn) {
-              const shouldOpen = !showCalendar;
-              setShowCalendar(shouldOpen);
-              setShowGuestOptions(false);
+  className={`${styles.field} ${checkInError ? styles.error : ''}`}
+  onClick={() => {
+    const shouldOpen = !showCalendar;
+    setShowCalendar(shouldOpen);
+    setShowGuestOptions(false);
+    setCheckInError(false); // Clear error on interaction
 
-              if (shouldOpen && window.innerWidth <= 600) {
-                setTimeout(() => {
-                  calendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
-              }
-            }
-          }}
-        >
-          <label>{t('booking.checkout')}</label>
-          <div className={styles.dateValue}>
-            {checkOut ? format(checkOut, 'dd MMM yyyy', { locale: currentLocale }) : t('booking.select')}
-          </div>
+    if (shouldOpen && window.innerWidth <= 600) {
+      setTimeout(() => {
+        calendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }}
+>
+  <label>{t('booking.checkin')}</label>
+  <div className={styles.dateValue}>
+    {checkIn ? format(checkIn, 'dd MMM yyyy', { locale: currentLocale }) : t('booking.select')}
+  </div>
+</div>
+<div
+  className={`${styles.field} ${checkOutError ? styles.error : ''}`}
+  onClick={() => {
+    if (checkIn) {
+      const shouldOpen = !showCalendar;
+      setShowCalendar(shouldOpen);
+      setShowGuestOptions(false);
+      setCheckOutError(false); // Clear error on interaction
 
-        </div>
+      if (shouldOpen && window.innerWidth <= 600) {
+        setTimeout(() => {
+          calendarRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+    }
+  }}
+>
+  <label>{t('booking.checkout')}</label>
+  <div className={styles.dateValue}>
+    {checkOut ? format(checkOut, 'dd MMM yyyy', { locale: currentLocale }) : t('booking.select')}
+  </div>
+</div>
+
         <div className={styles.field} onClick={() => {
           setShowGuestOptions(!showGuestOptions);
           setShowCalendar(false); // 👈 close calendar when opening guests

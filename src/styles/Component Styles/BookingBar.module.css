@@ -291,3 +291,7 @@
     justify-content: center;
   }
 }
+.error {
+  border: 1px solid red;
+border-radius: 1rem;
+}
