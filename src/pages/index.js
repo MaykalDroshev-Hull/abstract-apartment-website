@@ -56,7 +56,7 @@ const Home = () => {
             ))}
           </p>
 
-          <img src="/Images/Gallery/LivingArea1.jpg" alt="Quality Service" className={styles.whyChooseImage} />
+          <img src="/Images/Gallery/LivingRoom5.jpg" alt="Quality Service" className={styles.whyChooseImage} />
         </div>
       </div>
     </>

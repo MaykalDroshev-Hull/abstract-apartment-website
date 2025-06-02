@@ -12,8 +12,8 @@ const Meta = ({ title, keywords, description }) => {
 
   // Set default values if not provided
   const defaultTitle = "Abstract Apartment";
-  const defaultKeywords = 'Car detailing, Auto detailing, Car cleaning, Car polishing, Paint correction, Ceramic coating, Car wash, Mobile detailing, Interior detailing, Exterior detailing, Waxing, Buffing, Upholstery Cleaning, Headlight Restoration, Detailing Packages, Detailing Services, Car Care Tips, Detailing Supplies, Detailing Equipment';
-  const defaultDescription = `Асеа-м Детайлинг предлага професионални услуги за автомобилно детайлинг, които ще помогнат на вашия автомобил да изглежда на най-високото си ниво. Ние предлагаме различни пакети, които отговарят на вашите нужди, включително вътрешно и външно почистване, корекция на боята, керамично покритие и още. Свържете се с нас днес, за да насрочите час.`;
+  const defaultKeywords = 'Апартамент под наем, Ваканционен апартамент, Паралия Офринио, Апартамент Гърция, Летен отдих, ... , Vacation rental, Apartment near the beach, Paralia Ofrynio, Summer apartment Greece, Family vacation, Private parking, BBQ, Sea getaway';
+  const defaultDescription = 'Добре дошли в Апартамент “Абстракт” – уютен и напълно оборудван ваканционен апартамент само на 2 минути от плажа в Паралия Офринио, Гърция. Насладете се на комфорт с климатик, българска телевизия, голяма тераса, барбекю, частен паркинг и бърз интернет. Идеален за семейна почивка сред морски дарове, гръцко кафе и топло море. Резервирайте сега и усетете уюта на дома край морето!';
 
   return (
     <Head>
