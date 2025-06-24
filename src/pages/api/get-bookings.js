@@ -22,7 +22,9 @@ export default async function handler(req, res) {
       PaidPrice,
       Comments
     `)
-    .gt('CheckOutDT', new Date().toISOString()).order('CheckInDT');
+    // .gt('CheckOutDT', new Date().toISOString()) 
+    //we want all results, will filter in admin page
+    .order('CheckInDT');
 
   if (error) {
     console.error('Error fetching bookings:', error);

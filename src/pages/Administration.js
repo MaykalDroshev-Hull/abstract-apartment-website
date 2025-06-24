@@ -34,6 +34,7 @@ const Administration = () => {
   useEffect(() => {
     loadBookings();
   }, []);
+  const [showAll, setShowAll] = useState(false);
 
   const loadBookings = async () => {
     const data = await fetchBookings();
@@ -190,6 +191,9 @@ const Administration = () => {
       </div>
     );
   }
+const filteredBookings = showAll
+  ? bookings
+  : bookings.filter(b => isAfter(parseISO(b.CheckOutDT), new Date()));
 
   return (
     <div className={styles.adminPage}>
@@ -296,7 +300,12 @@ const Administration = () => {
       </div>
 
       <div className={styles.bookingsList}>
+
+
         <h2>Бъдещи Резервации</h2>
+                <button onClick={() => setShowAll(!showAll)}>
+  {showAll ? 'Покажи само бъдещи резервации' : 'Покажи всички резервации'}
+</button><br></br><br></br>
         <table>
           <thead>
             <tr>
@@ -312,7 +321,8 @@ const Administration = () => {
             </tr>
           </thead>
           <tbody>
-            {bookings.map((b) => (
+            {
+            filteredBookings.map((b) => (
               <tr
                 key={b.BookingID}
                 className={overlappingIDs.has(b.BookingID) ? styles.overlappingRow : ''}
