@@ -4,6 +4,8 @@ import { Nunito } from 'next/font/google'
 import '../styles/globals.css'
 import BackToTop from "@/components/Page Components/BackToTop";
 import { appWithTranslation } from 'next-i18next';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 //Changing subset of 'Nunito' font to latin and setting it to its own variable
@@ -18,6 +20,7 @@ const MyApp = ({ Component, pageProps }) => (
         <Component {...pageProps} />
         <BackToTop />
       </Layout>
+      <ToastContainer position="top-center" newestOnTop closeOnClick draggable pauseOnHover theme="colored" style={{ zIndex: 10000 }} />
     </main>
   </ChakraProvider>
 )

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import styles from '../styles/Page Styles/Administration.module.css';
 import { format, parseISO } from 'date-fns';
 import { isAfter, isBefore, isEqual } from 'date-fns';
@@ -14,6 +15,7 @@ const fetchBookings = async () => {
 
 const Administration = () => {
   const [bookings, setBookings] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     CheckInDT: '',
     CheckOutDT: '',
@@ -92,15 +94,20 @@ const Administration = () => {
   };
 
   const handleAdd = async () => {
-    // Add a new booking + customer
-    const res = await fetch('/api/add-booking', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-    });
-    if (res.ok) {
-      await loadBookings();
-      setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '', FullPrice: '', PaidPrice: '', Comments: '' });
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/add-booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (res.ok) {
+        await loadBookings();
+        setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '', FullPrice: '', PaidPrice: '', Comments: '' });
+        toast.success('Добавено успешно', { position: 'top-center', style: { background: '#16a34a' } });
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
   const [editCustomerID, setEditCustomerID] = useState(null);
@@ -132,33 +139,47 @@ const Administration = () => {
   };
 
   const handleSaveEdit = async () => {
-    const res = await fetch('/api/edit-booking', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        BookingID: editBookingID,
-        newCheckInDT: formData.CheckInDT,
-        newCheckOutDT: formData.CheckOutDT,
-        FullPrice: formData.FullPrice,
-        PaidPrice: formData.PaidPrice,
-        Comments: formData.Comments,
-      }),
-    });
-    if (res.ok) {
-      setIsEditing(false);
-      setEditBookingID(null);
-      setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '', FullPrice: '', PaidPrice: '', Comments: '' });
-      await loadBookings();
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/edit-booking', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          BookingID: editBookingID,
+          newCheckInDT: formData.CheckInDT,
+          newCheckOutDT: formData.CheckOutDT,
+          FullPrice: formData.FullPrice,
+          PaidPrice: formData.PaidPrice,
+          Comments: formData.Comments,
+        }),
+      });
+      if (res.ok) {
+        setIsEditing(false);
+        setEditBookingID(null);
+        setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '', FullPrice: '', PaidPrice: '', Comments: '' });
+        await loadBookings();
+        toast.success('Редактирано успешно', { position: 'top-center', style: { background: '#16a34a' } });
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleDelete = async (BookingID) => {
-    const res = await fetch('/api/delete-booking', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ BookingID }),
-    });
-    if (res.ok) await loadBookings();
+    setIsLoading(true);
+    try {
+      const res = await fetch('/api/delete-booking', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ BookingID }),
+      });
+      if (res.ok) {
+        await loadBookings();
+        toast.success('Изтрито успешно', { position: 'top-center', style: { background: '#16a34a' } });
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
   const handleLogin = () => {
     const envUsername = process.env.NEXT_PUBLIC_ADMIN_USERNAME;
@@ -197,6 +218,11 @@ const filteredBookings = showAll
 
   return (
     <div className={styles.adminPage}>
+      {isLoading && (
+        <div className={styles.loadingOverlay} role="status" aria-live="polite" aria-busy="true">
+          <span className={styles.loader}></span>
+        </div>
+      )}
       <h1 className={styles.heading}>Управление на резервации</h1>
       {/* {currentBooking && (
   <div className={styles.currentBookingBox}>
@@ -288,7 +314,7 @@ const filteredBookings = showAll
             onChange={handleChange}
           />
         </label>
-        <button onClick={isEditing ? handleSaveEdit : handleAdd}>
+        <button onClick={isEditing ? handleSaveEdit : handleAdd} disabled={isLoading}>
           {isEditing ? 'Запази' : 'Добави'}
         </button>
 
