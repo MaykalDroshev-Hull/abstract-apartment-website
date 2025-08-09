@@ -57,6 +57,22 @@
 .formSection button:hover {
   background-color: #005bb5;
 }
+.requiredAsterisk {
+  color: #dc2626;
+  margin-left: 4px;
+}
+
+.errorText {
+  color: #dc2626;
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.invalidInput {
+  border-color: #dc2626 !important;
+  background-color: #fff5f5;
+}
 .loginContainer {
   display: flex;
   flex-direction: column;

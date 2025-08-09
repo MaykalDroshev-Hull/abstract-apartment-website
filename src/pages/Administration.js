@@ -33,6 +33,8 @@ const Administration = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [usernameInput, setUsernameInput] = useState('');
   const [passwordInput, setPasswordInput] = useState('');
+  const [errors, setErrors] = useState({});
+  const [showErrors, setShowErrors] = useState(false);
   useEffect(() => {
     loadBookings();
   }, []);
@@ -68,6 +70,29 @@ const Administration = () => {
   };
 
   const overlappingIDs = getOverlappingBookingIDs();
+  const requiredFields = [
+    'CheckInDT',
+    'CheckOutDT',
+    'FirstName',
+    'LastName',
+    'Telephone',
+    'FullPrice',
+    'PaidPrice',
+  ];
+
+  const computeErrors = () => {
+    const newErrors = {};
+    for (const field of requiredFields) {
+      const value = formData[field];
+      const isEmpty = value === undefined || value === null || String(value).trim() === '';
+      if (isEmpty) newErrors[field] = 'задължително';
+    }
+    return newErrors;
+  };
+
+  useEffect(() => {
+    setErrors(computeErrors());
+  }, [formData.CheckInDT, formData.CheckOutDT, formData.FirstName, formData.LastName, formData.Telephone, formData.FullPrice, formData.PaidPrice]);
   const getCurrentBooking = () => {
     const today = new Date();
     return bookings.find(b => {
@@ -91,9 +116,17 @@ const Administration = () => {
     setEditBookingID(null);
     setEditCustomerID(null);
     setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '', FullPrice: '', PaidPrice: '', Comments: '' });
+    setErrors({});
+    setShowErrors(false);
   };
 
   const handleAdd = async () => {
+    const currentErrors = computeErrors();
+    if (Object.keys(currentErrors).length > 0) {
+      setErrors(currentErrors);
+      setShowErrors(true);
+      return;
+    }
     setIsLoading(true);
     try {
       const res = await fetch('/api/add-booking', {
@@ -105,6 +138,8 @@ const Administration = () => {
         await loadBookings();
         setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '', FullPrice: '', PaidPrice: '', Comments: '' });
         toast.success('Добавено успешно', { position: 'top-center', style: { background: '#16a34a' } });
+        setErrors({});
+        setShowErrors(false);
       }
     } finally {
       setIsLoading(false);
@@ -136,9 +171,17 @@ const Administration = () => {
     if (formRef.current) {
       formRef.current.scrollIntoView({ behavior: 'smooth' });
     }
+    // Show errors immediately if required fields in the loaded booking are missing
+    setShowErrors(true);
   };
 
   const handleSaveEdit = async () => {
+    const currentErrors = computeErrors();
+    if (Object.keys(currentErrors).length > 0) {
+      setErrors(currentErrors);
+      setShowErrors(true);
+      return;
+    }
     setIsLoading(true);
     try {
       const res = await fetch('/api/edit-booking', {
@@ -159,6 +202,8 @@ const Administration = () => {
         setFormData({ CheckInDT: '', CheckOutDT: '', FirstName: '', LastName: '', Telephone: '', FullPrice: '', PaidPrice: '', Comments: '' });
         await loadBookings();
         toast.success('Редактирано успешно', { position: 'top-center', style: { background: '#16a34a' } });
+        setErrors({});
+        setShowErrors(false);
       }
     } finally {
       setIsLoading(false);
@@ -238,25 +283,33 @@ const filteredBookings = showAll
 <div className={styles.formSection} ref={formRef}>
         <h2>{isEditing ? 'Редактирай Резервация' : 'Добави Нова Резервация'}</h2>
         <label>
-          Настаняване:
+          Настаняване<span className={styles.requiredAsterisk}>*</span>:
           <input
             type="date"
             name="CheckInDT"
             value={formData.CheckInDT}
             onChange={handleChange}
+            className={`${showErrors && errors.CheckInDT ? styles.invalidInput : ''}`}
           />
+          {showErrors && errors.CheckInDT && (
+            <div className={styles.errorText}>задължително</div>
+          )}
         </label>
         <label>
-          Освобождаване:
+          Освобождаване<span className={styles.requiredAsterisk}>*</span>:
           <input
             type="date"
             name="CheckOutDT"
             value={formData.CheckOutDT}
             onChange={handleChange}
+            className={`${showErrors && errors.CheckOutDT ? styles.invalidInput : ''}`}
           />
+          {showErrors && errors.CheckOutDT && (
+            <div className={styles.errorText}>задължително</div>
+          )}
         </label>
         <label>
-          Име:
+          Име<span className={styles.requiredAsterisk}>*</span>:
           <input
             type="text"
             name="FirstName"
@@ -264,10 +317,14 @@ const filteredBookings = showAll
             value={formData.FirstName}
             onChange={handleChange}
             disabled={isEditing}
+            className={`${showErrors && errors.FirstName ? styles.invalidInput : ''}`}
           />
+          {showErrors && errors.FirstName && (
+            <div className={styles.errorText}>задължително</div>
+          )}
         </label>
         <label>
-          Фамилия:
+          Фамилия<span className={styles.requiredAsterisk}>*</span>:
           <input
             type="text"
             name="LastName"
@@ -275,10 +332,14 @@ const filteredBookings = showAll
             value={formData.LastName}
             onChange={handleChange}
             disabled={isEditing}
+            className={`${showErrors && errors.LastName ? styles.invalidInput : ''}`}
           />
+          {showErrors && errors.LastName && (
+            <div className={styles.errorText}>задължително</div>
+          )}
         </label>
         <label>
-          Телефон:
+          Телефон<span className={styles.requiredAsterisk}>*</span>:
           <input
             type="text"
             name="Telephone"
@@ -286,25 +347,37 @@ const filteredBookings = showAll
             value={formData.Telephone}
             onChange={handleChange}
             disabled={isEditing}
+            className={`${showErrors && errors.Telephone ? styles.invalidInput : ''}`}
           />
+          {showErrors && errors.Telephone && (
+            <div className={styles.errorText}>задължително</div>
+          )}
         </label>
         <label>
-          Обща Сума (€):
+          Обща Сума (€)<span className={styles.requiredAsterisk}>*</span>:
           <input
             type="number"
             name="FullPrice"
             value={formData.FullPrice}
             onChange={handleChange}
+            className={`${showErrors && errors.FullPrice ? styles.invalidInput : ''}`}
           />
+          {showErrors && errors.FullPrice && (
+            <div className={styles.errorText}>задължително</div>
+          )}
         </label>
         <label>
-          Платено (€):
+          Платено (€)<span className={styles.requiredAsterisk}>*</span>:
           <input
             type="number"
             name="PaidPrice"
             value={formData.PaidPrice}
             onChange={handleChange}
+            className={`${showErrors && errors.PaidPrice ? styles.invalidInput : ''}`}
           />
+          {showErrors && errors.PaidPrice && (
+            <div className={styles.errorText}>задължително</div>
+          )}
         </label>
         <label>
           Коментари:
@@ -314,7 +387,7 @@ const filteredBookings = showAll
             onChange={handleChange}
           />
         </label>
-        <button onClick={isEditing ? handleSaveEdit : handleAdd} disabled={isLoading}>
+        <button onClick={isEditing ? handleSaveEdit : handleAdd} disabled={isLoading || (isEditing && Object.keys(errors).length > 0)}>
           {isEditing ? 'Запази' : 'Добави'}
         </button>
 
