@@ -152,7 +152,7 @@ The way it works is that the website uses an email to send one to itself with al
 
 ## Heartbeat to keep Supabase active
 
-We write a record to a simple `heartbeat` table every 6 hours to avoid Supabase free-tier sleep due to inactivity.
+We write a record to a simple `heartbeat` table once per day at 09:00 UTC to avoid Supabase free-tier sleep due to inactivity.
 
 1) Create the table in Supabase (SQL editor):
 
@@ -172,20 +172,20 @@ create index if not exists heartbeat_created_at_idx on public.heartbeat (created
 - `SUPABASE_SERVICE_ROLE_KEY` = your Supabase service role key (server-side only)
 - `NEXT_PUBLIC_SUPABASE_URL` already used in the app
 
-3) Cron schedule (Vercel): add `vercel.json` in project root:
+3) Cron schedule (Vercel): add `vercel.json` in project root (times are in UTC):
 
 ```json
 {
   "crons": [
     {
       "path": "/api/heartbeat",
-      "schedule": "0 */6 * * *"
+      "schedule": "0 9 * * *"
     }
   ]
 }
 ```
 
-This will call `POST /api/heartbeat` every 6 hours automatically. You can also trigger it manually:
+This will call `POST /api/heartbeat` once per day at 09:00 UTC automatically. You can also trigger it manually:
 
 ```
 curl -X POST https://<your-deployment-domain>/api/heartbeat
