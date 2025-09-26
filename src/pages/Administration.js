@@ -36,7 +36,6 @@ const Administration = () => {
   const [errors, setErrors] = useState({});
   const [showErrors, setShowErrors] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  
   useEffect(() => {
     checkAuthentication();
     loadBookings();
