@@ -8,7 +8,7 @@ const supabase = createClient(
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { CheckInDT, CheckOutDT, FirstName, LastName, Telephone, FullPrice, PaidPrice, Comments } = req.body;
+  const { CheckInDT, CheckOutDT, FirstName, LastName, Telephone, FullPrice, PaidPrice, Comments, apartmentid } = req.body;
 
   const { data: customer, error: custErr } = await supabase
     .from('Customer')
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 
   const { error: bookErr } = await supabase
     .from('Booking')
-    .insert([{ CheckInDT, CheckOutDT, CustomerID: customer.CustomerID, FullPrice, PaidPrice, Comments }]);
+    .insert([{ CheckInDT, CheckOutDT, CustomerID: customer.CustomerID, FullPrice, PaidPrice, Comments, apartmentid }]);
 
   if (bookErr) return res.status(500).json({ error: bookErr });
 

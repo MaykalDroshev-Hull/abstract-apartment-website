@@ -6,7 +6,9 @@ const supabase = createClient(
 );
 
 export default async function handler(req, res) {
-  const { data, error } = await supabase
+  const { apartmentid } = req.query;
+
+  let query = supabase
     .from('Booking')
     .select(`
       BookingID,
@@ -22,9 +24,16 @@ export default async function handler(req, res) {
       PaidPrice,
       Comments
     `)
-    // .gt('CheckOutDT', new Date().toISOString()) 
+    // .gt('CheckOutDT', new Date().toISOString())
     //we want all results, will filter in admin page
     .order('CheckInDT');
+
+  // Filter by apartmentid if provided
+  if (apartmentid) {
+    query = query.eq('apartmentid', parseInt(apartmentid));
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error('Error fetching bookings:', error);

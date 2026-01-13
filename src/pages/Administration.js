@@ -8,7 +8,7 @@ import { useRef } from 'react';
 
 
 const fetchBookings = async () => {
-  const res = await fetch('/api/get-bookings');
+  const res = await fetch('/api/get-bookings?apartmentid=1');
   const data = await res.json();
   return data.bookings || [];
 };
@@ -147,7 +147,7 @@ const Administration = () => {
       const res = await fetch('/api/add-booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, apartmentid: 1 }),
       });
       if (res.ok) {
         await loadBookings();
@@ -209,6 +209,7 @@ const Administration = () => {
           FullPrice: formData.FullPrice,
           PaidPrice: formData.PaidPrice,
           Comments: formData.Comments,
+          apartmentid: 1,
         }),
       });
       if (res.ok) {
