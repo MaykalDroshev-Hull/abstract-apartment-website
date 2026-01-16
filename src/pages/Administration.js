@@ -473,6 +473,7 @@ const filteredBookings = showAll
               <th>Освобождаване</th>
               <th>Обща Сума</th>
               <th>Платено</th>
+              <th>Оставащо</th>
               <th>Коментари</th>
               <th>Действия</th>
             </tr>
@@ -491,6 +492,14 @@ const filteredBookings = showAll
                 <td data-label="Освобождаване" className={styles.overlappingRowData}>{format(parseISO(b.CheckOutDT), 'yyyy-MM-dd')}</td>
                 <td data-label="Обща Сума" className={styles.overlappingRowData}>{b.FullPrice != null && b.FullPrice !== '' ? '€' + b.FullPrice : ''}</td>
                 <td data-label="Платено" className={styles.overlappingRowData}>{b.PaidPrice != null && b.PaidPrice !== '' ? '€' + b.PaidPrice : ''}</td>
+                <td data-label="Оставащо" className={styles.overlappingRowData}>
+                  {(() => {
+                    const fullPrice = b.FullPrice != null && b.FullPrice !== '' ? parseFloat(b.FullPrice) : 0;
+                    const paidPrice = b.PaidPrice != null && b.PaidPrice !== '' ? parseFloat(b.PaidPrice) : 0;
+                    const leftover = Math.round(fullPrice - paidPrice);
+                    return leftover !== 0 || (b.FullPrice != null && b.FullPrice !== '') ? '€' + leftover : '';
+                  })()}
+                </td>
                 <td data-label="Коментари" className={styles.overlappingRowData}>{b.Comments || ''}</td>
                 <td data-label="Действия">
                   <button onClick={() => handleEdit(b)}>Редактирай</button>
